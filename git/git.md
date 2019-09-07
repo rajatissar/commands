@@ -3,7 +3,8 @@
 ## 1. remote link to git
 
    `git remote show origin`
-   Output:
+
+Output:
 
 ```
 * remote origin
