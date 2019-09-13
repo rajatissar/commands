@@ -29,21 +29,33 @@ https://github.com/rajatissar/commands.git
 
 ## 2. Tags
 
-- Create an annotated tag \\n
+```
+Create an annotated tag`
+```
 `git tag -a <tag_name> -m '<tag_message>'`
 
-- Create a lightweight tag \\n
+```
+Create a lightweight tag
+```
 `git tag <tag_name>`
 
-- Push all your tags (a regular push won't push a tag) \\n
+```
+Push all your tags (a regular push won't push a tag)
+```
 `git push origin --tags`
 
-- Push a single tag \\n
+```
+Push a single tag
+```
 `git push origin : <tag_name>`
 
-- List the tags in a repository \\n
+```
+List the tags in a repository
+```
 `git tag`
 
-- Remove a tag from a repository \\n
+```
+Remove a tag from a repository
+```
 `git tag -d <tag_name>`
 `git push origin :refs/tags/<tag_name>`
