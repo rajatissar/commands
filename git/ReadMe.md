@@ -59,3 +59,8 @@ Remove a tag from a repository
 ```
 `git tag -d <tag_name>`
 `git push origin :refs/tags/<tag_name>`
+
+## 3. config
+
+`git config user.email`
+`git config user.name`

@@ -3,6 +3,12 @@
 ```sh
 $ heroku login
 
+$ heroku git:remote -a repository_name
+
+$ git push heroku master
+    OR
+$ git push heroku branch_name:master
+
 $ node --version
 
 $ npm --version
@@ -12,10 +18,6 @@ $ git --version
 $ heroku create
 
 $ git remote -v
-
-$ git push heroku master
-    OR
-$ git push heroku branch_name:master
 
 $ heroku logs
 
