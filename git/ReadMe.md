@@ -1,12 +1,9 @@
 # Git
 
-## 1. remote link to git
+## 1. Git Remote link
 
-   `git remote show origin`
-
-Output:
-
-```
+```bash
+$ git remote show origin
 * remote origin
   Fetch URL: https://github.com/rajatissar/commands.git
   Push  URL: https://github.com/rajatissar/commands.git
@@ -19,48 +16,50 @@ Output:
   Local ref configured for 'git push':
     master pushes to master (up to date)
 ```
-`git config --get remote.origin.url`
 
-Output:
-
-```
+```bash
+$ git config --get remote.origin.url
 https://github.com/rajatissar/commands.git
 ```
 
 ## 2. Tags
 
+```bash
+$ git tag -a <tag_name> -m '<tag_message>'
+Create an annotated tag
 ```
-Create an annotated tag`
-```
-`git tag -a <tag_name> -m '<tag_message>'`
 
-```
+```bash
+$ git tag <tag_name>
 Create a lightweight tag
 ```
-`git tag <tag_name>`
 
-```
+```bash
+$ git push origin --tags
 Push all your tags (a regular push won't push a tag)
 ```
-`git push origin --tags`
 
-```
+```bash
+$ git push origin : <tag_name>
 Push a single tag
 ```
-`git push origin : <tag_name>`
 
-```
+```bash
+git tag
 List the tags in a repository
 ```
-`git tag`
 
-```
+```bash
+$ git tag -d <tag_name>
+$ git push origin :refs/tags/<tag_name>
 Remove a tag from a repository
 ```
-`git tag -d <tag_name>`
-`git push origin :refs/tags/<tag_name>`
 
 ## 3. config
 
-`git config user.email`
-`git config user.name`
+```bash
+$ git config user.email
+Sets email of user
+$ git config user.name
+Sets name of user
+```
