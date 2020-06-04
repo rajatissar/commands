@@ -462,7 +462,7 @@ WHERE
     phone IS NOT NULL;
 ```
 
-- alias :- A PostgreSQL alias assigns a table or a column a temporary name in a query. The aliases only exist during the execution of the query.
+- ALIAS :- A PostgreSQL alias assigns a table or a column a temporary name in a query. The aliases only exist during the execution of the query.
 
 ```SQL
 SELECT column_name AS alias_name
@@ -487,6 +487,64 @@ SELECT t1.column_name,
 FROM table_name1 t1
 INNER JOIN table_name2 t2 ON join_predicate;
 ```
+
+### (b). JOIN
+
+PostgreSQL join is used to combine columns from one (self-join) or more tables based on the values of the common columns between the tables. The common columns are typically the primary key columns of the first table and foreign key columns of the second table.
+
+- INNER JOIN
+
+```SQL
+SELECT
+    a.id id_a,
+    a.fruit fruit_a,
+    b.id id_b,
+    b.fruit fruit_b
+FROM
+    basket_a a
+INNER JOIN basket_b b ON a.fruit = b.fruit;
+```
+
+- LEFT JOIN
+
+```SQL
+SELECT
+    a.id id_a,
+    a.fruit fruit_a,
+    b.id id_b,
+    b.fruit fruit_b
+FROM
+    basket_a a
+LEFT JOIN basket_b b ON a.fruit = b.fruit;
+```
+
+- RIGHT JOIN
+
+```SQL
+SELECT
+    a.id id_a,
+    a.fruit fruit_a,
+    b.id id_b,
+    b.fruit fruit_b
+FROM
+    basket_a a
+RIGHT JOIN basket_b b ON a.fruit = b.fruit;
+```
+
+- FULL OUTER JOIN
+
+```SQL
+SELECT
+    a.id id_a,
+    a.fruit fruit_a,
+    b.id id_b,
+    b.fruit fruit_b
+FROM
+    basket_a a
+FULL OUTER JOIN basket_b b ON a.fruit = b.fruit;
+```
+
+![JOIN](./assets/PostgreSQL-Joins.png)
 
 ## 5. Notes
 
