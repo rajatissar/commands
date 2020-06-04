@@ -505,6 +505,22 @@ FROM
 INNER JOIN basket_b b ON a.fruit = b.fruit;
 ```
 
+```SQL
+SELECT
+  customer.customer_id,
+  customer.first_name customer_first_name,
+  customer.last_name customer_last_name,
+  customer.email,
+  staff.first_name staff_first_name,
+  staff.last_name staff_last_name,
+  amount,
+  payment_date
+FROM
+  customer
+INNER JOIN payment ON payment.customer_id = customer.customer_id
+INNER JOIN staff ON payment.staff_id = staff.staff_id;
+```
+
 - LEFT JOIN
 
 ```SQL
@@ -544,6 +560,68 @@ FROM
 FULL OUTER JOIN basket_b b ON a.fruit = b.fruit;
 ```
 
+- SELF JOIN
+
+A self-join is a query in which a table is joined to itself. Self-joins are useful for comparing values in a column of rows within the same table.
+To form a self-join, you specify the same table twice with different aliases, set up the comparison, and eliminate cases where a value would be equal to itself.
+
+```SQL
+SELECT column_list
+FROM A a1
+INNER JOIN A b1 ON join_predicate;
+```
+
+```SQL
+SELECT
+    e.first_name || ' ' || e.last_name employee,
+    m .first_name || ' ' || m .last_name manager
+FROM
+    employee e
+INNER JOIN employee m ON e.manager_id = m .employee_id;
+```
+
+- CROSS JOIN
+
+A CROSS JOIN clause allows you to produce the Cartesian Product of rows in two or more tables. Different from the other JOIN operators such as LEFT JOIN  or INNER JOIN, the CROSS JOIN does not have any matching condition in the join clause.
+Suppose we have to perform the CROSS JOIN of two tables T1 and T2. For every row from T1 and T2 i.e., a cartesian product, the result set will contain a row that consists of all columns in the T1 table followed by all columns in the T2 table. If T1 has N rows, T2 has M rows, the result set will have N x M rows.
+
+```SQL
+SELECT *
+FROM T1
+CROSS JOIN T2;
+```
+
+```SQL
+SELECT *
+FROM T1, T2;
+```
+
+```SQL
+SELECT *
+FROM T1
+INNER JOIN T2 ON TRUE;
+```
+
+- NATURAL JOIN
+
+A natural join is a join that creates an implicit join based on the same column names in the joined tables.
+If you use the asterisk (*) in the select list, the result will contain the following columns:
+
+- All the common columns, which are the columns in the both tables that have the same name.
+- Every column in the first and second tables that is not a common column.
+
+```SQL
+SELECT *
+FROM T1
+NATURAL [INNER, LEFT, RIGHT] JOIN T2;
+```
+
+```SQL
+SELECT *
+FROM products
+NATURAL JOIN categories;
+```
+
 ![JOIN](./assets/PostgreSQL-Joins.png)
 
 ## 5. Notes
@@ -560,6 +638,6 @@ FULL OUTER JOIN basket_b b ON a.fruit = b.fruit;
 - BETWEEN - If you want to check a value against of date ranges, you should use the literal date in ISO 8601 format i.e., YYYY-MM-DD.
 - LIKE - If the pattern does not contain any wildcard character, the LIKE operator acts like the equal ( =) operator.
 - NULL - The comparison of NULL with a value will always result in NULL, which means an unknown result.
-- Because PostgreSQL evaluates the ORDER BY clause after the SELECT clause, you can use the column alias in the ORDER BY clause.
-- For the other clauses evaluated before the SELECT clause such as WHERE, GROUP BY, and HAVING, you cannot reference the column alias in these clauses.
+- Because PostgreSQL evaluates the ORDER BY clause after the SELECT clause, you can use the column alias in the ORDER BY clause. Other clauses evaluated before the SELECT clause such as WHERE, GROUP BY, and HAVING, you cannot reference the column alias in these clauses.
 - When you join a table to itself a.k.a self-join, you must use table aliases.
+- JOIN - A natural join can be an inner join, left join, or right join. If you do not specify a join explicitly e.g., INNER JOIN, LEFT JOIN, RIGHT JOIN, PostgreSQL will use the INNER JOIN by default.
