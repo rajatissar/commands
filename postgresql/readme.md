@@ -1133,6 +1133,128 @@ FROM
   subordinates;
 ```
 
+### (g). Modifying Data
+
+- INSERT
+
+```SQL
+INSERT INTO table_name(column1, column2, …)
+VALUES
+  (value1, value2, …);
+```
+
+```SQL
+INSERT INTO link (url, name)
+VALUES
+  ('https://www.postgresqltutorial.com','PostgreSQL Tutorial');
+```
+
+```SQL
+INSERT INTO link (url, name, last_update)
+VALUES
+  ('https://www.tumblr.com/','Tumblr',DEFAULT);
+```
+
+- UPDATE
+
+```SQL
+UPDATE table1
+SET column1 = value1,
+    column2 = value2 ,...
+WHERE
+  condition;
+```
+
+```SQL
+UPDATE link
+SET last_update = DEFAULT
+WHERE
+  last_update IS NULL;
+```
+
+```SQL
+UPDATE link
+SET column_1 = column_2;
+```
+
+```SQL
+UPDATE link_tmp
+SET rel = link.rel,
+ description = link.description,
+ last_update = link.last_update
+FROM
+  link
+WHERE
+  link_tmp.id = link.id;
+```
+
+```SQL
+UPDATE link
+SET description = 'Learn PostgreSQL fast and easy',
+ rel = 'follow'
+WHERE
+  ID = 1
+RETURNING id,
+  description,
+  rel;
+```
+
+- DELETE
+
+```SQL
+DELETE FROM table1
+WHERE condition;
+```
+
+```SQL
+DELETE FROM table1
+USING another_table
+WHERE table.id = another_table.id AND …
+```
+
+```SQL
+DELETE FROM table1
+WHERE table.id = (SELECT id FROM another_table);
+```
+
+```SQL
+DELETE FROM link_tmp
+RETURNING *;
+```
+
+- UPSERT
+
+In relational databases, the term upsert is referred to as a merge. The idea is that when you insert a new row into the table, PostgreSQL will update the row if it already exists, otherwise, PostgreSQL inserts the new row. That is why we call the action is upsert (update or insert).
+
+```SQL
+INSERT INTO table_name(column_list) VALUES(value_list)
+ON CONFLICT target action;
+```
+
+```SQL
+INSERT INTO customers (NAME, email)
+VALUES
+  (
+    'Microsoft',
+    'hotline@microsoft.com'
+  )
+ON CONFLICT ON CONSTRAINT customers_name_key
+DO NOTHING;
+```
+
+```SQL
+INSERT INTO customers (name, email)
+VALUES
+  (
+    'Microsoft',
+    'hotline@microsoft.com'
+  )
+ON CONFLICT (name)
+DO
+    UPDATE
+    SET email = EXCLUDED.email || ';' || customers.email;
+```
+
 ## 5. Notes
 
 - SQL language is case insensitive. It means that SELECT or select has the same effect.
@@ -1165,3 +1287,5 @@ x <> ANY (a,b,c)
 is equivalent to
 x <> a OR <> b OR x <> c
 ```
+
+- The date format is YYYY-MM-DD
