@@ -896,6 +896,154 @@ ORDER BY
     segment;
 ```
 
+### (f). Sub Query
+
+The query inside the brackets is called a sub query or an inner query. The query that contains the sub query is known as an outer query.
+
+PostgreSQL executes the query that contains a sub query in the following sequence:
+
+- First, executes the sub query.
+- Second, gets the result and passes it to the outer query.
+- Third, executes the outer query.
+
+```SQL
+SELECT
+  film_id,
+  title,
+  rental_rate
+FROM
+  film
+WHERE
+  rental_rate > (
+  SELECT
+      AVG (rental_rate)
+    FROM
+      film
+  );
+```
+
+- ANY
+
+ANY operator compares a value to a set of values returned by a sub query. The following illustrates the syntax of  the ANY operator:
+
+```SQL
+expression operator ANY(sub query)
+```
+
+In this syntax:
+
+- The sub query must return exactly one column.
+- The ANY operator must be preceded by one of the following comparison operator =, <=, >, <, > and <>
+- The ANY operator returns true if any value of the sub query meets the condition, otherwise, it returns false.
+
+```SQL
+SELECT
+    title,
+    category_id
+FROM
+    film
+INNER JOIN film_category
+        USING(film_id)
+WHERE
+    category_id = ANY(
+        SELECT
+            category_id
+        FROM
+            category
+        WHERE
+            NAME = 'Action'
+            OR NAME = 'Drama'
+    );
+```
+
+- ALL
+
+ALL operator allows you to query data by comparing a value with a list of values returned by a sub query.
+
+```SQL
+comparison_operator ALL (sub query)
+```
+
+- The ALL operator must be preceded by a comparison operator such as equal (=), not equal (!=), greater than (>), greater than or equal to (>=), less than (<), and less than or equal to (<=).
+- The ALL operator must be followed by a sub query which also must be surrounded by the parentheses.
+
+With the assumption that the sub query returns some rows, the ALL operator works as follows:
+
+- column_name > ALL (sub query) the expression evaluates to true if a value is greater than the biggest value returned by the sub query.
+- column_name >= ALL (sub query) the expression evaluates to true if a value is greater than or equal to the biggest value returned by the sub query.
+- column_name < ALL (sub query) the expression evaluates to true if a value is less than the smallest value returned by the sub query.
+- column_name <= ALL (sub query) the expression evaluates to true if a value is less than or equal to the smallest value returned by the sub query.
+- column_name = ALL (sub query) the expression evaluates to true if a value is equal to any value returned by the sub query.
+- column_name != ALL (sub query) the expression evaluates to true if a value is not equal to any value returned by the sub query.
+
+```SQL
+SELECT
+    film_id,
+    title,
+    length
+FROM
+    film
+WHERE
+    length > ALL (
+            SELECT
+                ROUND(AVG (length),2)
+            FROM
+                film
+            GROUP BY
+                rating
+    )
+ORDER BY
+    length;
+```
+
+- EXISTS
+
+EXISTS operator is used to test for existence of rows in a sub query.
+
+A sub query can be an input of the EXISTS operator. If the sub query returns any row, the EXISTS operator returns true. If the sub query returns no row, the result of EXISTS operator is false.
+
+```SQL
+EXISTS (sub query)
+```
+
+```SQL
+SELECT first_name,
+       last_name
+FROM customer c
+WHERE EXISTS
+    (SELECT 1
+     FROM payment p
+     WHERE p.customer_id = c.customer_id
+       AND amount > 11 )
+ORDER BY first_name,
+         last_name;
+```
+
+```SQL
+SELECT first_name,
+       last_name
+FROM customer c
+WHERE NOT EXISTS
+    (SELECT 1
+     FROM payment p
+     WHERE p.customer_id = c.customer_id
+       AND amount > 11 )
+ORDER BY first_name,
+         last_name;
+```
+
+If the sub query returns NULL, EXISTS returns true
+
+```SQL
+SELECT
+  first_name,
+  last_name
+FROM
+  customer
+WHERE
+  EXISTS( SELECT NULL )
+```
+
 ## 5. Notes
 
 - SQL language is case insensitive. It means that SELECT or select has the same effect.
@@ -919,3 +1067,12 @@ ORDER BY
 - HAVING - The HAVING clause sets the condition for group rows created by the GROUP BY clause after the GROUP BY clause applies while the WHERE clause sets the condition for individual rows before GROUP BY clause applies. This is the main difference between the HAVING and WHERE clauses.
 - HAVING - In PostgreSQL, you can use the HAVING clause without the GROUP BY clause. In this case, the HAVING clause will turn the query into a single group.
 - PostgreSQL provides the GROUPING SETS, CUBE which is the subclause of the GROUP BY clause.
+- ANY / SOME - SOME is a synonym for ANY, meaning that you can substitute SOME for ANY in any SQL statement.
+- ANY - The = ANY is equivalent to IN operator.
+- ANY - The <> ANY operator is different from NOT IN. The following expression:
+
+```SQL
+x <> ANY (a,b,c)
+is equivalent to
+x <> a OR <> b OR x <> c
+```
