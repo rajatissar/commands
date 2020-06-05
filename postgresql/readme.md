@@ -624,6 +624,278 @@ NATURAL JOIN categories;
 
 ![JOIN](./assets/PostgreSQL-Joins.png)
 
+### (c). Grouping Data
+
+```SQL
+SELECT
+   column_1,
+   column_2,
+   aggregate_function(column_3)
+FROM
+   table_name
+GROUP BY
+   column_1,
+   column_2;
+```
+
+```SQL
+SELECT
+   customer_id
+FROM
+   payment
+GROUP BY
+   customer_id;
+```
+
+```SQL
+SELECT
+  customer_id,
+  SUM (amount)
+FROM
+  payment
+GROUP BY
+  customer_id
+ORDER BY
+  SUM (amount) DESC;
+```
+
+```SQL
+SELECT
+  DATE(payment_date) paid_date,
+  SUM(amount) sum
+FROM
+  payment
+GROUP BY
+  DATE(payment_date);
+```
+
+```SQL
+SELECT
+  column_1,
+  aggregate_function (column_2)
+FROM
+  tbl_name
+GROUP BY
+  column_1
+HAVING
+  condition;
+```
+
+### (d). Set Operation
+
+- UNION
+
+The UNION operator combines result sets of two or more SELECT statements into a single result set.
+
+The following are rules applied to the queries:
+
+- Both queries must return the same number of columns.
+- The corresponding columns in the queries must have compatible data types.
+
+```SQL
+SELECT *
+FROM
+  sales2007q1
+UNION
+SELECT *
+FROM
+  sales2007q2;
+```
+
+- INTERSECT
+
+INTERSECT operator combines the result sets of two or more SELECT statements into a single result set. The INTERSECT operator returns any rows that are available in both result set or returned by both queries.
+
+To use the INTERSECT operator, the columns that appear in the SELECT statements must follow the rules below:
+
+- The number of columns and their order in the SELECT clauses must the be the same.
+- The data types of the columns must be compatible.
+
+```SQL
+SELECT
+  column_list
+FROM
+  A
+INTERSECT
+SELECT
+  column_list
+FROM
+  B;
+```
+
+```SQL
+SELECT
+  employee_id
+FROM
+  keys
+INTERSECT
+SELECT
+  employee_id
+FROM
+  hipos;
+```
+
+![INTERSECT-Operator](./assets/PostgreSQL-INTERSECT-Operator-300x206.png)
+
+- EXCEPT
+
+The EXCEPT operator returns distinct rows from the first (left) query that are not in the output of the second (right) query.
+
+To combine the queries using the EXCEPT operator, you must obey the following rules:
+
+- The number of columns and their orders must be the same in the two queries.
+- The data types of the respective columns must be compatible.
+
+```SQL
+SELECT column_list
+FROM A
+WHERE condition_a
+EXCEPT
+SELECT column_list
+FROM B
+WHERE condition_b;
+```
+
+```SQL
+SELECT
+  film_id,
+  title
+FROM
+  film
+EXCEPT
+  SELECT DISTINCT
+    inventory.film_id,
+    title
+  FROM
+    inventory
+INNER JOIN film ON film.film_id = inventory.film_id
+ORDER BY title;
+```
+
+![EXCEPT-Operator](./assets/PostgreSQL-EXCEPT-300x202.png)
+
+### (e). Grouping Sets
+
+A grouping set is a set of columns to which you want to group.
+
+```SQL
+SELECT
+    brand,
+    segment,
+    SUM (quantity)
+FROM
+    sales
+GROUP BY
+    brand,
+    segment
+
+UNION ALL
+
+SELECT
+    brand,
+    NULL,
+    SUM (quantity)
+FROM
+    sales
+GROUP BY
+    brand
+
+UNION ALL
+
+SELECT
+    NULL,
+    segment,
+    SUM (quantity)
+FROM
+    sales
+GROUP BY
+    segment
+
+UNION ALL
+
+SELECT
+    NULL,
+    NULL,
+    SUM (quantity)
+FROM
+    sales;
+```
+
+```SQL
+SELECT
+    brand,
+    segment,
+    SUM (quantity)
+FROM
+    sales
+GROUP BY
+    GROUPING SETS (
+        (brand, segment),
+        (brand),
+        (segment),
+        ()
+    );
+```
+
+- CUBE
+
+```SQL
+SELECT
+    c1,
+    c2,
+    c3,
+    aggregate (c4)
+FROM
+    table_name
+GROUP BY
+    CUBE (c1, c2, c3);
+```
+
+```SQL
+SELECT
+    brand,
+    segment,
+    SUM (quantity)
+FROM
+    sales
+GROUP BY
+    CUBE (brand, segment)
+ORDER BY
+    brand,
+    segment;
+```
+
+- ROLLUP
+
+Different from the CUBE subclause, ROLLUP does not generate all possible grouping sets based on the specified columns. It just makes a subset of those.
+A common use of  ROLLUP is to calculate the aggregations of data by year, month, and date, considering the hierarchy year > month > date.
+
+```SQL
+SELECT
+    c1,
+    c2,
+    c3,
+    aggregate(c4)
+FROM
+    table_name
+GROUP BY
+    ROLLUP (c1, c2, c3);
+```
+
+```SQL
+SELECT
+    brand,
+    segment,
+    SUM (quantity)
+FROM
+    sales
+GROUP BY
+    ROLLUP (brand, segment)
+ORDER BY
+    brand,
+    segment;
+```
+
 ## 5. Notes
 
 - SQL language is case insensitive. It means that SELECT or select has the same effect.
@@ -641,3 +913,9 @@ NATURAL JOIN categories;
 - Because PostgreSQL evaluates the ORDER BY clause after the SELECT clause, you can use the column alias in the ORDER BY clause. Other clauses evaluated before the SELECT clause such as WHERE, GROUP BY, and HAVING, you cannot reference the column alias in these clauses.
 - When you join a table to itself a.k.a self-join, you must use table aliases.
 - JOIN - A natural join can be an inner join, left join, or right join. If you do not specify a join explicitly e.g., INNER JOIN, LEFT JOIN, RIGHT JOIN, PostgreSQL will use the INNER JOIN by default.
+- GROUP BY - The GROUP BY clause must appear right after the FROM or WHERE clause.
+- GROUP BY - The GROUP BY clause is useful when it is used in conjunction with an aggregate function
+- GROUP BY - To filter groups, you use the HAVING clause instead of WHERE clause.
+- HAVING - The HAVING clause sets the condition for group rows created by the GROUP BY clause after the GROUP BY clause applies while the WHERE clause sets the condition for individual rows before GROUP BY clause applies. This is the main difference between the HAVING and WHERE clauses.
+- HAVING - In PostgreSQL, you can use the HAVING clause without the GROUP BY clause. In this case, the HAVING clause will turn the query into a single group.
+- PostgreSQL provides the GROUPING SETS, CUBE which is the subclause of the GROUP BY clause.
