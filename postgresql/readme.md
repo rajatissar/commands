@@ -1044,6 +1044,95 @@ WHERE
   EXISTS( SELECT NULL )
 ```
 
+### (f). CTE (Common Table Expressions)
+
+```SQL
+WITH cte_name (column_list) AS (
+    CTE_query_definition
+)
+statement;
+```
+
+In this syntax:
+
+- First, specify the name of the CTE following by an optional column list.
+- Second, inside the body of the WITH clause, specify a query that returns a result set. If you do not explicitly specify the column list after the CTE name, the select list of the CTE_query_definition will become the column list of the CTE.
+- Third, use the CTE like a table or view in the statement which can be a SELECT, INSERT, UPDATE, or DELETE.
+
+```SQL
+WITH cte_film AS (
+    SELECT
+        film_id,
+        title,
+        (CASE
+            WHEN length < 30 THEN 'Short'
+            WHEN length < 90 THEN 'Medium'
+            ELSE 'Long'
+        END) length
+    FROM
+        film
+)
+SELECT
+    film_id,
+    title,
+    length
+FROM
+    cte_film
+WHERE
+    length = 'Long'
+ORDER BY
+    title;
+```
+
+- Recursive Query
+
+A recursive query is a query that refers to a recursive CTE. The recursive queries are useful in many situations such as for querying hierarchical data like organizational structure, bill of materials, etc.
+
+```SQL
+WITH RECURSIVE cte_name AS(
+    CTE_query_definition -- non-recursive term
+    UNION [ALL]
+    CTE_query definion  -- recursive term
+) SELECT * FROM cte_name;
+```
+
+A recursive CTE has three elements:
+
+- Non-recursive term: the non-recursive term is a CTE query definition that forms the base result set of the CTE structure.
+- Recursive term: the recursive term is one or more CTE query definitions joined with the non-recursive term using the UNION or UNION ALL operator. The recursive term references the CTE name itself.
+- Termination check: the recursion stops when no rows are returned from the previous iteration.
+
+PostgreSQL executes a recursive CTE in the following sequence:
+
+- Execute the non-recursive term to create the base result set (R0).
+- Execute recursive term with Ri as an input to return the result set Ri+1 as the output.
+- Repeat step 2 until an empty set is returned. (termination check)
+- Return the final result set that is a UNION or UNION ALL of the result set R0, R1, … Rn
+
+```SQL
+WITH RECURSIVE subordinates AS (
+  SELECT
+    employee_id,
+    manager_id,
+    full_name
+  FROM
+    employees
+  WHERE
+    employee_id = 2
+  UNION
+    SELECT
+      e.employee_id,
+      e.manager_id,
+      e.full_name
+    FROM
+      employees e
+    INNER JOIN subordinates s ON s.employee_id = e.manager_id
+) SELECT
+  *
+FROM
+  subordinates;
+```
+
 ## 5. Notes
 
 - SQL language is case insensitive. It means that SELECT or select has the same effect.
