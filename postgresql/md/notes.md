@@ -1,6 +1,5 @@
 # Notes
 
-```text
 - SQL language is case insensitive. It means that SELECT or select has the same effect.
 - The semicolon is not a part of the SQL statement. It is used to signal PostgreSQL the end of an SQL statement. The semicolon is also used to separate two SQL statements.
 - ORDER BY uses ASC by default.
@@ -25,8 +24,11 @@
 - ANY / SOME - SOME is a synonym for ANY, meaning that you can substitute SOME for ANY in any SQL statement.
 - ANY - The = ANY is equivalent to IN operator.
 - ANY - The <> ANY operator is different from NOT IN. The following expression:
+
+```SQL
 x <> ANY (a,b,c)
 is equivalent to
 x <> a OR <> b OR x <> c
-- The date format is YYYY-MM-DD
 ```
+
+- The date format is YYYY-MM-DD
