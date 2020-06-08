@@ -1,6 +1,6 @@
 # Notes
 
-```SQL
+```text
 - SQL language is case insensitive. It means that SELECT or select has the same effect.
 - The semicolon is not a part of the SQL statement. It is used to signal PostgreSQL the end of an SQL statement. The semicolon is also used to separate two SQL statements.
 - ORDER BY uses ASC by default.
