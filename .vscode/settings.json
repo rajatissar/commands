@@ -8,6 +8,7 @@
     "Ctype",
     "ILIKE",
     "upsert",
+    "TABLESPACE",
     "dvdrental",
     "rajat",
     "Inspiron",
