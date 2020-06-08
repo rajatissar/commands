@@ -90,7 +90,7 @@ x <> a OR <> b OR x <> c
 
 ## 4. Commands
 
-### (a). Current PostgreSQL version that you have in the system
+### (a). Check current PostgreSQL version that you have in the system
 
 ```ssh
 $ SELECT version();
@@ -99,7 +99,7 @@ $ SELECT version();
 (1 row)
 ```
 
-### (b). postgresql status
+### (b). Check PostgreSQL running status
 
 ```sh
 $ sudo /etc/init.d/postgresql status
@@ -127,14 +127,9 @@ Jun 03 14:28:33 rajat-Inspiron-3542 systemd[1]: Starting PostgreSQL RDBMS...
 Jun 03 14:28:33 rajat-Inspiron-3542 systemd[1]: Started PostgreSQL RDBMS.
 ```
 
-### (c). Import Database
+### (c). Database
 
-```sh
-postgres@rajat-Inspiron-3542:~$ pg_restore -U postgres -d dvdrental C:\dvdrental\dvdrental.tar
-Import database
-```
-
-### (d). Database
+- List of Databases
 
 ```ssh
 postgres=# \l
@@ -150,9 +145,93 @@ postgres=# \l
 (4 rows)
 ```
 
+- Connect Database
+
 ```ssh
 postgres=# \c dvdrental
 You are now connected to database "dvdrental" as user "postgres".
+```
+
+- Disconnect Database
+
+By connecting to another database, you are automatically disconnected from the database to which you connected.
+
+```ssh
+dvdrental-# \c postgres
+You are now connected to database "postgres" as user "postgres".
+```
+
+- Import Database
+
+```ssh
+postgres@rajat-Inspiron-3542:~$ pg_restore -U postgres -d dvdrental C:\dvdrental\dvdrental.tar
+Import database
+```
+
+- Database Size
+
+```SQL
+SELECT
+    pg_size_pretty (
+        pg_database_size ('dvdrental')
+    );
+```
+
+- All Database size
+
+```SQL
+SELECT
+    pg_database.datname,
+    pg_size_pretty(pg_database_size(pg_database.datname)) AS size
+    FROM pg_database;
+```
+
+### (d). TABLE
+
+- Table size
+
+pg_relation_size is used to calculate the size of table.
+
+- The pg_relation_size() function returns the size of a specific table in bytes.
+- The pg_relation_size() function returns the size of the table only, not included indexes or additional objects.
+- To get the total size of a table, you use the pg_total_relation_size() function.
+
+```SQL
+SELECT pg_relation_size('table_name');
+```
+
+```SQL
+SELECT pg_size_pretty (pg_relation_size('actor'));
+```
+
+- Indexes size
+
+```SQL
+SELECT
+    pg_size_pretty (pg_indexes_size('actor'));
+```
+
+- Tablespace size
+
+```SQL
+SELECT
+    pg_size_pretty (
+        pg_tablespace_size ('pg_default')
+    );
+```
+
+- Value size
+To find how much space that needs to store a specific value
+
+```SQL
+SELECT pg_column_size(5::smallint);
+```
+
+### (e). Show psql query results more clearly
+
+```ssh
+dvdrental=# \x on
+Expanded display is on.
 ```
 
 ## 5. SQL Queries
@@ -1339,4 +1418,147 @@ TO '/home/rajat/Documents/my-work/github/commands/postgresql/data/persons.csv' D
 
 ```SQL
 \copy (SELECT * FROM persons) to 'C:\tmp\persons_client.csv' with csv;
+```
+
+### (j). Database
+
+- CREATE
+
+```SQL
+CREATE DATABASE db_name
+ OWNER = role_name
+ TEMPLATE = template
+ ENCODING = encoding
+ LC_COLLATE = collate
+ LC_CTYPE = ctype
+ TABLESPACE = tablespace_name
+ CONNECTION LIMIT = max_concurrent_connection
+```
+
+- db_name: is the name of the new database that you want to create. The database name must be unique in the PostgreSQL database server. If you try to create a new database that has the same name as an existing database, PostgreSQL will issue an error.
+- role_name: is the role name of the user who will own the new database. PostgreSQL uses user’s role name who executes the CREATE DATABASE statement as the default role name.
+- template: is the name of the database template from which the new database creates. PostgreSQL allows you to create a database based on a template database. The template1 is the default template database.
+- encoding: specifies the character set encoding for the new database. By default, it is the encoding of the template database.
+- collate: specifies a collation for the new database. The collation specifies the sort order of strings that affect the result of the ORDER BY clause in the SELECT statement. The template database’s collation is the default collation for the new database if you don’t specify it explicitly in the LC_COLLATE parameter.
+- ctype: specifies the character classification for the new database. The ctype affects the categorization e.g., digit, lower and upper. The default is the character classification of the template database.
+- tablespace_name: specifies the tablespace name for the new database. The default is the template database’s tablespace.
+- max_concurrent_connection: specifies the maximum concurrent connections to the new database. The default is -1 i.e., unlimited. This feature is very useful in the shared hosting environments where you can configure the maximum concurrent connections for a particular database.
+
+```SQL
+CREATE DATABASE db1;
+```
+
+- RENAME
+
+```SQL
+ALTER DATABASE target_database RENAME TO new_database;
+```
+
+To rename a database, you have to connect to another database e.g., postgres.
+
+- Change Owner
+
+```SQL
+ALTER DATABASE target_database OWNER TO new_owner;
+```
+
+Only the super_user or owner of the database can change the database’s owner. The database owner must also have the CREATEDB privilege to rename the database.
+
+- Change tablespace
+
+```SQL
+ALTER DATABASE target_database SET TABLESPACE new_tablespace;
+```
+
+```SQL
+ALTER DATABASE target_database SET configuration_parameter = value;
+```
+
+Notice that only a supper_user or the database owner can change the default session variables for a database.
+
+```SQL
+CREATE ROLE hr
+VALID UNTIL 'infinity';
+```
+
+```SQL
+CREATE TABLESPACE hr_default
+  OWNER hr
+  LOCATION E'C:\\pgdata\\hr';
+```
+
+```SQL
+ALTER DATABASE db1 SET escape_string_warning TO off;
+```
+
+- Check all active connections to the dvdrental database
+
+```SQL
+SELECT
+    *
+FROM
+    pg_stat_activity
+WHERE
+    datname = 'dvdrental';
+```
+
+```table
+-[ RECORD 1 ]----+------------------------------------------------------------
+datid            | 16384
+datname          | dvdrental
+pid              | 31252
+usesysid         | 10
+usename          | postgres
+application_name | psql
+client_addr      |
+client_hostname  |
+client_port      | -1
+backend_start    | 2020-06-08 14:42:38.90932+05:30
+xact_start       | 2020-06-08 16:21:18.311672+05:30
+query_start      | 2020-06-08 16:21:18.311672+05:30
+state_change     | 2020-06-08 16:21:18.311681+05:30
+wait_event_type  |
+wait_event       |
+state            | active
+backend_xid      |
+backend_xmin     | 769
+query            | SELECT * FROM pg_stat_activity WHERE datname = 'dvdrental';
+backend_type     | client backend
+```
+
+- Terminate all connections to the dvdrental database
+
+```SQL
+SELECT
+    pg_terminate_backend (pid)
+FROM
+    pg_stat_activity
+WHERE
+    datname = 'dvdrental';
+```
+
+- DROP
+
+```SQL
+DROP DATABASE target_database;
+```
+
+- Copy
+
+```SQL
+CREATE DATABASE target_db
+WITH TEMPLATE source_db;
+```
+
+```SQL
+CREATE DATABASE dvdrental_test
+WITH TEMPLATE dvdrental;
+```
+
+```SQL
+pg_dump -U postgres -O dvdrental dvdrental.sql
+```
+
+```SQL
+psql -U postgres -d dvdrental_test -f dvdrental.sql
 ```
