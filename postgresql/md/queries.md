@@ -1,6 +1,183 @@
 # Queries
 
-## 1. SELECT
+## 1. Database
+
+- CREATE
+
+```SQL
+CREATE DATABASE db_name
+ OWNER = role_name
+ TEMPLATE = template
+ ENCODING = encoding
+ LC_COLLATE = collate
+ LC_CTYPE = ctype
+ TABLESPACE = tablespace_name
+ CONNECTION LIMIT = max_concurrent_connection
+```
+
+- db_name: is the name of the new database that you want to create. The database name must be unique in the PostgreSQL database server. If you try to create a new database that has the same name as an existing database, PostgreSQL will issue an error.
+- role_name: is the role name of the user who will own the new database. PostgreSQL uses user’s role name who executes the CREATE DATABASE statement as the default role name.
+- template: is the name of the database template from which the new database creates. PostgreSQL allows you to create a database based on a template database. The template1 is the default template database.
+- encoding: specifies the character set encoding for the new database. By default, it is the encoding of the template database.
+- collate: specifies a collation for the new database. The collation specifies the sort order of strings that affect the result of the ORDER BY clause in the SELECT statement. The template database’s collation is the default collation for the new database if you don’t specify it explicitly in the LC_COLLATE parameter.
+- ctype: specifies the character classification for the new database. The ctype affects the categorization e.g., digit, lower and upper. The default is the character classification of the template database.
+- tablespace_name: specifies the tablespace name for the new database. The default is the template database’s tablespace.
+- max_concurrent_connection: specifies the maximum concurrent connections to the new database. The default is -1 i.e., unlimited. This feature is very useful in the shared hosting environments where you can configure the maximum concurrent connections for a particular database.
+
+```SQL
+CREATE DATABASE db1;
+```
+
+- :pencil: RENAME
+
+```SQL
+ALTER DATABASE target_database RENAME TO new_database;
+```
+
+To rename a database, you have to connect to another database e.g., postgres.
+
+- Change Owner
+
+```SQL
+ALTER DATABASE target_database OWNER TO new_owner;
+```
+
+Only the super_user or owner of the database can change the database’s owner. The database owner must also have the CREATEDB privilege to rename the database.
+
+- Change tablespace
+
+```SQL
+ALTER DATABASE target_database SET TABLESPACE new_tablespace;
+```
+
+```SQL
+ALTER DATABASE target_database SET configuration_parameter = value;
+```
+
+Notice that only a supper_user or the database owner can change the default session variables for a database.
+
+```SQL
+CREATE ROLE hr
+VALID UNTIL 'infinity';
+```
+
+```SQL
+CREATE TABLESPACE hr_default
+  OWNER hr
+  LOCATION E'C:\\pgdata\\hr';
+```
+
+```SQL
+ALTER DATABASE db1 SET escape_string_warning TO off;
+```
+
+- Check all active connections to the dvdrental database
+
+```SQL
+SELECT
+    *
+FROM
+    pg_stat_activity
+WHERE
+    datname = 'dvdrental';
+```
+
+```table
+-[ RECORD 1 ]----+------------------------------------------------------------
+datid            | 16384
+datname          | dvdrental
+pid              | 31252
+usesysid         | 10
+usename          | postgres
+application_name | psql
+client_addr      |
+client_hostname  |
+client_port      | -1
+backend_start    | 2020-06-08 14:42:38.90932+05:30
+xact_start       | 2020-06-08 16:21:18.311672+05:30
+query_start      | 2020-06-08 16:21:18.311672+05:30
+state_change     | 2020-06-08 16:21:18.311681+05:30
+wait_event_type  |
+wait_event       |
+state            | active
+backend_xid      |
+backend_xmin     | 769
+query            | SELECT * FROM pg_stat_activity WHERE datname = 'dvdrental';
+backend_type     | client backend
+```
+
+- Terminate all connections to the dvdrental database
+
+```SQL
+SELECT
+    pg_terminate_backend (pid)
+FROM
+    pg_stat_activity
+WHERE
+    datname = 'dvdrental';
+```
+
+- DROP
+
+```SQL
+DROP DATABASE target_database;
+```
+
+- Copy
+
+```SQL
+CREATE DATABASE target_db
+WITH TEMPLATE source_db;
+```
+
+```SQL
+CREATE DATABASE dvdrental_test
+WITH TEMPLATE dvdrental;
+```
+
+```SQL
+pg_dump -U postgres -O dvdrental dvdrental.sql
+```
+
+```SQL
+psql -U postgres -d dvdrental_test -f dvdrental.sql
+```
+
+## 2. Table
+
+```SQL
+CREATE TABLE table_name (
+  column_name TYPE column_constraint,
+  table_constraint table_constraint
+) INHERITS existing_table_name;
+```
+
+```SQL
+CREATE TABLE account(
+  user_id serial PRIMARY KEY,
+  username VARCHAR (50) UNIQUE NOT NULL,
+  password VARCHAR (50) NOT NULL,
+  email VARCHAR (355) UNIQUE NOT NULL,
+  created_on TIMESTAMP NOT NULL,
+  last_login TIMESTAMP
+);
+```
+
+## 3. Data Type
+
+PostgreSQL supports the following data types:
+
+- Boolean.
+- Character types such as char, varchar, and text.
+- Numeric types such as integer and floating-point number.
+- Temporal types such as date, time, timestamp, and interval.
+- UUID for storing Universally Unique Identifiers.
+- Array for storing array strings, numbers, etc.
+- JSON stores JSON data.
+- hstore stores key-value pair.
+- Special types such as network address and geometric data.
+
+## 4. SELECT
 
 | Query                      | Explanation            |
 |----------------------------|------------------------|
@@ -366,7 +543,7 @@ FROM table_name1 t1
 INNER JOIN table_name2 t2 ON join_predicate;
 ```
 
-## 2. JOIN
+## 5. JOIN
 
 PostgreSQL join is used to combine columns from one (self-join) or more tables based on the values of the common columns between the tables. The common columns are typically the primary key columns of the first table and foreign key columns of the second table.
 
@@ -502,7 +679,7 @@ NATURAL JOIN categories;
 
 ![JOIN](./assets/PostgreSQL-Joins.png)
 
-## 3. Grouping Data
+## 6. Grouping Data
 
 ```SQL
 SELECT
@@ -559,7 +736,7 @@ HAVING
   condition;
 ```
 
-## 4. Set Operation
+## 7. Set Operation
 
 - UNION
 
@@ -652,7 +829,7 @@ ORDER BY title;
 
 ![EXCEPT-Operator](./assets/PostgreSQL-EXCEPT-300x202.png)
 
-## 5. Grouping Sets
+## 8. Grouping Sets
 
 A grouping set is a set of columns to which you want to group.
 
@@ -774,7 +951,7 @@ ORDER BY
     segment;
 ```
 
-## 6. Sub Query
+## 9. Sub Query
 
 The query inside the brackets is called a sub query or an inner query. The query that contains the sub query is known as an outer query.
 
@@ -922,7 +1099,7 @@ WHERE
   EXISTS( SELECT NULL )
 ```
 
-## 7. CTE (Common Table Expressions)
+## 10. CTE (Common Table Expressions)
 
 ```SQL
 WITH cte_name (column_list) AS (
@@ -1011,7 +1188,7 @@ FROM
   subordinates;
 ```
 
-## 8. Modifying Data
+## 11. Modifying Data
 
 - INSERT
 
@@ -1133,7 +1310,7 @@ DO
     SET email = EXCLUDED.email || ';' || customers.email;
 ```
 
-## 9. Transaction
+## 12. Transaction
 
 A database transaction is a single unit of work which may consist of one or more operations.
 
@@ -1168,7 +1345,7 @@ OR
 ROLLBACK;
 ```
 
-## 10. Import & Export
+## 13. Import & Export
 
 ```SQL
 COPY persons(first_name,last_name,dob,email)
@@ -1182,147 +1359,4 @@ TO '/home/rajat/Documents/my-work/github/commands/postgresql/data/persons.csv' D
 
 ```SQL
 \copy (SELECT * FROM persons) to 'C:\tmp\persons_client.csv' with csv;
-```
-
-## 11. Database
-
-- CREATE
-
-```SQL
-CREATE DATABASE db_name
- OWNER = role_name
- TEMPLATE = template
- ENCODING = encoding
- LC_COLLATE = collate
- LC_CTYPE = ctype
- TABLESPACE = tablespace_name
- CONNECTION LIMIT = max_concurrent_connection
-```
-
-- db_name: is the name of the new database that you want to create. The database name must be unique in the PostgreSQL database server. If you try to create a new database that has the same name as an existing database, PostgreSQL will issue an error.
-- role_name: is the role name of the user who will own the new database. PostgreSQL uses user’s role name who executes the CREATE DATABASE statement as the default role name.
-- template: is the name of the database template from which the new database creates. PostgreSQL allows you to create a database based on a template database. The template1 is the default template database.
-- encoding: specifies the character set encoding for the new database. By default, it is the encoding of the template database.
-- collate: specifies a collation for the new database. The collation specifies the sort order of strings that affect the result of the ORDER BY clause in the SELECT statement. The template database’s collation is the default collation for the new database if you don’t specify it explicitly in the LC_COLLATE parameter.
-- ctype: specifies the character classification for the new database. The ctype affects the categorization e.g., digit, lower and upper. The default is the character classification of the template database.
-- tablespace_name: specifies the tablespace name for the new database. The default is the template database’s tablespace.
-- max_concurrent_connection: specifies the maximum concurrent connections to the new database. The default is -1 i.e., unlimited. This feature is very useful in the shared hosting environments where you can configure the maximum concurrent connections for a particular database.
-
-```SQL
-CREATE DATABASE db1;
-```
-
-- :pencil: RENAME
-
-```SQL
-ALTER DATABASE target_database RENAME TO new_database;
-```
-
-To rename a database, you have to connect to another database e.g., postgres.
-
-- Change Owner
-
-```SQL
-ALTER DATABASE target_database OWNER TO new_owner;
-```
-
-Only the super_user or owner of the database can change the database’s owner. The database owner must also have the CREATEDB privilege to rename the database.
-
-- Change tablespace
-
-```SQL
-ALTER DATABASE target_database SET TABLESPACE new_tablespace;
-```
-
-```SQL
-ALTER DATABASE target_database SET configuration_parameter = value;
-```
-
-Notice that only a supper_user or the database owner can change the default session variables for a database.
-
-```SQL
-CREATE ROLE hr
-VALID UNTIL 'infinity';
-```
-
-```SQL
-CREATE TABLESPACE hr_default
-  OWNER hr
-  LOCATION E'C:\\pgdata\\hr';
-```
-
-```SQL
-ALTER DATABASE db1 SET escape_string_warning TO off;
-```
-
-- Check all active connections to the dvdrental database
-
-```SQL
-SELECT
-    *
-FROM
-    pg_stat_activity
-WHERE
-    datname = 'dvdrental';
-```
-
-```table
--[ RECORD 1 ]----+------------------------------------------------------------
-datid            | 16384
-datname          | dvdrental
-pid              | 31252
-usesysid         | 10
-usename          | postgres
-application_name | psql
-client_addr      |
-client_hostname  |
-client_port      | -1
-backend_start    | 2020-06-08 14:42:38.90932+05:30
-xact_start       | 2020-06-08 16:21:18.311672+05:30
-query_start      | 2020-06-08 16:21:18.311672+05:30
-state_change     | 2020-06-08 16:21:18.311681+05:30
-wait_event_type  |
-wait_event       |
-state            | active
-backend_xid      |
-backend_xmin     | 769
-query            | SELECT * FROM pg_stat_activity WHERE datname = 'dvdrental';
-backend_type     | client backend
-```
-
-- Terminate all connections to the dvdrental database
-
-```SQL
-SELECT
-    pg_terminate_backend (pid)
-FROM
-    pg_stat_activity
-WHERE
-    datname = 'dvdrental';
-```
-
-- DROP
-
-```SQL
-DROP DATABASE target_database;
-```
-
-- Copy
-
-```SQL
-CREATE DATABASE target_db
-WITH TEMPLATE source_db;
-```
-
-```SQL
-CREATE DATABASE dvdrental_test
-WITH TEMPLATE dvdrental;
-```
-
-```SQL
-pg_dump -U postgres -O dvdrental dvdrental.sql
-```
-
-```SQL
-psql -U postgres -d dvdrental_test -f dvdrental.sql
 ```

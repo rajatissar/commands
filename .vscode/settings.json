@@ -18,6 +18,8 @@
     "xact",
     "xmin",
     "smallint",
+    "varchar",
+    "hstore",
     "psql",
     "dvdrental",
     "rajat",

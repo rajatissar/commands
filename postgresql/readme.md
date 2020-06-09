@@ -33,8 +33,8 @@ Connect to dvdrental database
 
 ## 4. [Terminology](https://github.com/rajatissar/commands/blob/master/postgresql/md/terminology.md)
 
-## 5. [Notes](https://github.com/rajatissar/commands/blob/master/postgresql/md/notes.md) :pushpin:
+## 5. [Commands](https://github.com/rajatissar/commands/blob/master/postgresql/md/commands.md)
 
-## 6. [Commands](https://github.com/rajatissar/commands/blob/master/postgresql/md/commands.md)
+## 6. [Queries](https://github.com/rajatissar/commands/blob/master/postgresql/md/queries.md)
 
-## 7. [Queries](https://github.com/rajatissar/commands/blob/master/postgresql/md/queries.md)
+## 7. [Notes :pushpin:](https://github.com/rajatissar/commands/blob/master/postgresql/md/notes.md)

@@ -18,8 +18,8 @@ Tablespaces are where PostgreSQL stores the data. Tablespaces allow you to move 
 
 By default, PostgreSQL provides you with two tablespaces:
 
-- The pg_default is for storing user data.
-- The pg_global  is for storing system data.
+* The pg_default is for storing user data.
+* The pg_global  is for storing system data.
 
 ## 5. Views
 
