@@ -143,3 +143,23 @@ To find how much space that needs to store a specific value
 ```SQL
 SELECT pg_column_size(5::smallint);
 ```
+
+- Structure of Table
+
+```ssh
+dvdrental=# \d actor;
+                                            Table "public.actor"
+   Column    |            Type             | Collation | Nullable |                 Default
+-------------+-----------------------------+-----------+----------+-----------------------------------------
+ actor_id    | integer                     |           | not null | nextval('actor_actor_id_seq'::regclass)
+ first_name  | character varying(45)       |           | not null |
+ last_name   | character varying(45)       |           | not null |
+ last_update | timestamp without time zone |           | not null | now()
+Indexes:
+    "actor_pkey" PRIMARY KEY, btree (actor_id)
+    "idx_actor_last_name" btree (last_name)
+Referenced by:
+    TABLE "film_actor" CONSTRAINT "film_actor_actor_id_fkey" FOREIGN KEY (actor_id) REFERENCES actor(actor_id) ON UPDATE CASCADE ON DELETE RESTRICT
+Triggers:
+    last_updated BEFORE UPDATE ON actor FOR EACH ROW EXECUTE FUNCTION last_updated()
+```

@@ -163,6 +163,92 @@ CREATE TABLE account(
 );
 ```
 
+```SQL
+CREATE TABLE new_table_name
+AS query;
+```
+
+```SQL
+CREATE TEMP TABLE new_table_name
+AS query;
+```
+
+```SQL
+CREATE UNLOGGED TABLE new_table_name
+AS query;
+```
+
+```SQL
+CREATE TABLE action_film AS
+SELECT
+    film_id,
+    title,
+    release_year,
+    length,
+    rating
+FROM
+    film
+INNER JOIN film_category USING (film_id)
+WHERE
+    category_id = 1 ; -- action
+```
+
+- SERIAL
+
+```SQL
+CREATE TABLE table_name(
+    id SERIAL
+);
+```
+
+- SEQUENCE
+
+```SQL
+CREATE SEQUENCE [ IF NOT EXISTS ] sequence_name
+    [ AS { SMALLINT | INT | BIGINT } ]
+    [ INCREMENT [ BY ] increment ]
+    [ MINVALUE minvalue | NO MINVALUE ]
+    [ MAXVALUE maxvalue | NO MAXVALUE ]
+    [ START [ WITH ] start ]
+    [ CACHE cache ]
+    [ [ NO ] CYCLE ]
+    [ OWNED BY { table_name.column_name | NONE } ]
+```
+
+```SQL
+CREATE SEQUENCE sequence1
+INCREMENT 5
+START 100;
+```
+
+```SQL
+CREATE SEQUENCE order_item_id
+START 10
+INCREMENT 10
+MINVALUE 10
+OWNED BY order_details.item_id;
+```
+
+List all sequences in the current database
+
+```SQL
+SELECT
+    c.relname sequence_name
+FROM
+    pg_class
+WHERE
+    relkind = 'S';
+```
+
+```SQL
+DROP SEQUENCE [ IF EXISTS ] sequence_name [, ...]
+[ CASCADE | RESTRICT ];
+```
+
+```SQL
+DROP SEQUENCE IF EXISTS sequence1, sequence2;
+```
+
 ## 3. Data Type
 
 PostgreSQL supports the following data types:
@@ -541,6 +627,30 @@ SELECT t1.column_name,
      t2.column_name
 FROM table_name1 t1
 INNER JOIN table_name2 t2 ON join_predicate;
+```
+
+- SELECT INTO
+
+```SQL
+SELECT
+    column_list
+INTO [ TEMPORARY | TEMP | UNLOGGED ] [ TABLE ] new_table_name
+FROM
+    table_name
+WHERE
+    condition;
+```
+
+```SQL
+SELECT
+    film_id,
+    title,
+    rental_rate
+INTO TABLE film_r
+FROM
+    film
+WHERE
+    rating = 'R';
 ```
 
 ## 5. JOIN
