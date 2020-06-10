@@ -1,8 +1,23 @@
 {
+  // "editor.codeActionsOnSave": {
+  //   "source.fixAll.eslint": true
+  // },
+  "editor.cursorStyle": "line",
+  "editor.fontFamily": "'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
+  // "editor.formatOnPaste": true,
+  // "editor.formatOnSave": true,
+  "editor.lineNumbers": "on",
+  // "editor.matchBrackets": "always",
   "editor.minimap.enabled": false,
-  "window.zoomLevel": -1,
+  "editor.scrollBeyondLastLine": false,
+  // "editor.trimAutoWhitespace": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  // "javascript.updateImportsOnFileMove.enabled": "always",
+  "window.zoomLevel": -1.2,
   "workbench.colorTheme": "Monokai",
+  "workbench.activityBar.visible": true,
   "workbench.iconTheme": "vs-seti",
+  "workbench.commandPalette.history": 50,
   "cSpell.userWords": [
     "postgres",
     "postgresql",
@@ -47,5 +62,8 @@
     "RDBMS",
     "hipos",
     "definion"
-  ]
+  ],
+  "turboConsoleLog.addSemicolonInTheEnd": false,
+  "turboConsoleLog.quote": "'",
+  "turboConsoleLog.logMessagePrefix": ">>>>>>>>>>>>"
 }
