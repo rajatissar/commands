@@ -1,4 +1,8 @@
 {
+  "editor.minimap.enabled": false,
+  "window.zoomLevel": -1,
+  "workbench.colorTheme": "Monokai",
+  "workbench.iconTheme": "vs-seti",
   "cSpell.userWords": [
     "postgres",
     "postgresql",
@@ -30,6 +34,12 @@
     "maxvalue",
     "relname",
     "relkind",
+    "sandboxed",
+    "subblock",
+    "errcode",
+    "sqlstate",
+    "plpgsql",
+    "inout",
     "psql",
     "dvdrental",
     "rajat",
