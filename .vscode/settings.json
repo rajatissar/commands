@@ -9,7 +9,7 @@
   "editor.lineNumbers": "on",
   // "editor.matchBrackets": "always",
   "editor.minimap.enabled": false,
-  "editor.scrollBeyondLastLine": false,
+  "editor.scrollBeyondLastLine": true,
   // "editor.trimAutoWhitespace": true,
   "diffEditor.ignoreTrimWhitespace": false,
   // "javascript.updateImportsOnFileMove.enabled": "always",

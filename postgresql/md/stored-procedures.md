@@ -36,7 +36,7 @@ BEGIN
 END first_block $$;
 ```
 
-- Replacement of *$$*
+## Replacement of $$
 
 ```SQL
 DO
@@ -49,7 +49,7 @@ BEGIN
 END first_block';
 ```
 
-- *Block*
+## Block
 
 ```SQL
 DO $$
@@ -67,9 +67,9 @@ BEGIN
     counter1 := counter1 + 10;
     RAISE NOTICE 'The current value of counter1 in the subblock is %', counter1;
     RAISE NOTICE 'The current value of counter1 in the outer block is %', outer_block.counter1;
-   END;
+  END;
   -- Inner Block ends
-   RAISE NOTICE 'The current value of counter1 in the outer block is %', counter1;
+    RAISE NOTICE 'The current value of counter1 in the outer block is %', counter1;
 END outer_block $$;
 -- Outer Block ends
 ```
@@ -223,7 +223,7 @@ LANGUAGE PLPGSQL;
 SELECT fun1(20);
 ```
 
-- *OUT*
+### OUT
 
 ```SQL
 CREATE OR REPLACE FUNCTION hi_lo(a NUMERIC, b NUMERIC, c NUMERIC, OUT hi NUMERIC, OUT lo NUMERIC)
@@ -240,7 +240,7 @@ SELECT hi_lo(10,20,30);
 SELECT * FROM hi_lo(10,20,30);
 ```
 
-- *INOUT*
+### INOUT
 
 ```SQL
 CREATE OR REPLACE FUNCTION square(INOUT a NUMERIC)
@@ -255,7 +255,7 @@ LANGUAGE plpgsql;
 SELECT square(4);
 ```
 
-- *VARIADIC*
+### VARIADIC
 
 ```SQL
 CREATE OR REPLACE FUNCTION sum_avg(VARIADIC list NUMERIC[], OUT total NUMERIC, OUT average NUMERIC)
@@ -274,7 +274,7 @@ LANGUAGE plpgsql;
 SELECT * FROM sum_avg(10,20,30);
 ```
 
-- *Default Value*
+### Default Value
 
 ```SQL
 CREATE OR REPLACE FUNCTION get_rental_duration(
@@ -296,7 +296,7 @@ END; $$
 LANGUAGE plpgsql;
 ```
 
-- *DROP Function*
+### DROP Function
 
 ```SQL
 DROP FUNCTION get_rental_duration(INTEGER, DATE);
@@ -304,7 +304,7 @@ DROP FUNCTION get_rental_duration(INTEGER, DATE);
 
 You must specify the parameters together with the function name when you drop the function.
 
-- Returns Table
+### Returns Table
 
 ```SQL
 CREATE OR REPLACE FUNCTION get_film (p_pattern VARCHAR)
@@ -349,4 +349,294 @@ BEGIN
   END LOOP;
 END; $$
 LANGUAGE 'plpgsql';
+```
+
+## Control Structures
+
+### IF statement
+
+```SQL
+IF condition THEN
+  -- statements;
+END IF;
+```
+
+```SQL
+DO $$
+DECLARE
+  a integer := 10;
+  b integer := 20;
+BEGIN
+  IF a > b THEN
+    RAISE NOTICE 'a is greater than b';
+  END IF;
+
+  IF a < b THEN
+    RAISE NOTICE 'a is less than b';
+  END IF;
+
+  IF a = b THEN
+    RAISE NOTICE 'a is equal to b';
+  END IF;
+END $$;
+```
+
+```SQL
+IF condition THEN
+  -- statements;
+ELSE
+  -- alternative-statements;
+END IF;
+```
+
+```SQL
+DO $$
+DECLARE
+  a integer := 10;
+  b integer := 20;
+BEGIN
+  IF a > b THEN
+    RAISE NOTICE 'a is greater than b';
+  ELSE
+    RAISE NOTICE 'a is not greater than b';
+  END IF;
+END $$;
+```
+
+```SQL
+IF condition-1 THEN
+  --- if-statements-1;
+ELSIF condition-2 THEN
+  -- elsif-statements-2;
+-- ...
+ELSIF condition-n THEN
+  -- elsif-statements-n;
+ELSE
+  -- else-statements;
+END IF:
+```
+
+```SQL
+DO $$
+DECLARE
+  a integer := 10;
+  b integer := 10;
+BEGIN
+  IF a > b THEN
+    RAISE NOTICE 'a is greater than b';
+  ELSIF a < b THEN
+    RAISE NOTICE 'a is less than b';
+  ELSE
+    RAISE NOTICE 'a is equal to b';
+  END IF;
+END $$;
+```
+
+### CASE statement
+
+- *Simple CASE statement*
+
+There are two forms of the CASE statement: *simple* and *searched* CASE statements.
+The CASE expression evaluates to a value, while the CASE statement executes statements based on condition.
+
+```SQL
+CASE search-expression
+  WHEN expression_1 [, expression_2, ...] THEN
+      -- when-statements
+  [ ... ]
+  [ELSE
+    -- else-statements
+  ]
+END CASE;
+```
+
+```SQL
+CREATE OR REPLACE FUNCTION get_price_segment(p_film_id integer)
+  RETURNS VARCHAR(50) AS $$
+DECLARE
+  rate NUMERIC;
+  price_segment VARCHAR(50);
+BEGIN
+  -- get the rate based on film_id
+  SELECT INTO rate rental_rate
+  FROM film
+  WHERE film_id = p_film_id;
+
+  CASE rate
+    WHEN 0.99 THEN
+      price_segment = 'Mass';
+    WHEN 2.99 THEN
+      price_segment = 'Mainstream';
+    WHEN 4.99 THEN
+      price_segment = 'High End';
+    ELSE
+      price_segment = 'Unspecified';
+  END CASE;
+
+  RETURN price_segment;
+END; $$
+LANGUAGE plpgsql;
+```
+
+- *Searched CASE statement*
+
+```SQL
+CASE
+  WHEN boolean-expression-1 THEN
+    -- statements
+  [ WHEN boolean-expression-2 THEN
+    -- statements
+  ]
+  [ ELSE
+      -- statements
+  ]
+END CASE;
+```
+
+```SQL
+CREATE OR REPLACE FUNCTION get_customer_service (p_customer_id INTEGER)
+  RETURNS VARCHAR (25) AS $$
+DECLARE
+  total_payment NUMERIC;
+  service_level VARCHAR (25);
+BEGIN
+  -- get the rate based on film_id
+  SELECT
+  INTO total_payment SUM (amount)
+  FROM payment
+  WHERE customer_id = p_customer_id;
+  
+  CASE
+    WHEN total_payment > 200 THEN
+      service_level = 'Platinum';
+    WHEN total_payment > 100 THEN
+      service_level = 'Gold';
+    ELSE
+      service_level = 'Silver';
+   END CASE;
+
+   RETURN service_level;
+END; $$
+LANGUAGE plpgsql;
+```
+
+### LOOP Statement
+
+PostgreSQL provides you with three loop statements: *LOOP*, *WHILE loop*, and *FOR loop*.
+
+- *LOOP*
+
+```SQL
+<<label>>
+LOOP
+  -- Statements;
+  EXIT [<<label>>] WHEN condition;
+END LOOP;
+```
+
+```SQL
+CREATE OR REPLACE FUNCTION fibonacci (n INTEGER)
+  RETURNS INTEGER AS $$
+DECLARE
+  counter1 INTEGER := 0;
+  i INTEGER := 0;
+  j INTEGER := 1;
+BEGIN
+  
+  IF (n < 1) THEN
+    RETURN 0;
+  END IF;
+
+  LOOP
+    EXIT WHEN counter1 = n;
+    counter1 := counter1 + 1;
+    SELECT j, i + j INTO i, j;
+  END LOOP;
+
+  RETURN i;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+- *WHILE loop*
+
+```SQL
+[ <<label>> ]
+WHILE condition LOOP
+  -- statements;
+END LOOP;
+```
+
+```SQL
+CREATE OR REPLACE FUNCTION fibonacci (n INTEGER)
+  RETURNS INTEGER AS $$
+DECLARE
+  counter1 INTEGER := 0;
+  i INTEGER := 0;
+  j INTEGER := 1;
+BEGIN
+
+  IF (n < 1) THEN
+    RETURN 0;
+  END IF;
+
+  WHILE counter1 <= n LOOP
+    counter1 := counter1 + 1;
+    SELECT j, i + j INTO i, j;
+  END LOOP;
+
+  RETURN i;
+END;
+```
+
+- *FOR loop*
+
+```SQL
+[ <<label>> ]
+FOR loop_counter IN [ REVERSE ] from.. to [ BY expression ] LOOP
+    statements
+END LOOP [ label ];
+```
+
+```SQL
+DO $$
+BEGIN
+  FOR counter1 IN 1..5 LOOP
+  RAISE NOTICE 'counter1: %', counter1;
+  END LOOP;
+END; $$
+```
+
+```SQL
+DO $$
+BEGIN
+  FOR counter1 IN REVERSE 5..1 LOOP
+    RAISE NOTICE 'counter1: %', counter1;
+  END LOOP;
+END; $$
+```
+
+```SQL
+[ <<label>> ]
+FOR target IN query LOOP
+  -- statements
+END LOOP [ label ];
+```
+
+```SQL
+CREATE OR REPLACE FUNCTION for_loop_through_query(n INTEGER DEFAULT 10)
+RETURNS VOID AS $$
+DECLARE
+  rec RECORD;
+BEGIN
+  FOR rec IN
+    SELECT title
+    FROM film
+    ORDER BY title
+    LIMIT n
+  LOOP
+  RAISE NOTICE '%', rec.title;
+  END LOOP;
+END;
+$$ LANGUAGE plpgsql;
 ```
