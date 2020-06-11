@@ -31,4 +31,3 @@ x <> ANY (a,b,c)
 is equivalent to
 x <> a OR <> b OR x <> c
 ```
-

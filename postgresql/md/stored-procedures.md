@@ -4,8 +4,8 @@ In PostgreSQL, procedural languages such as PL/pgSQL, C, Perl, Python, and Tcl a
 
 PostgreSQL divides the procedural languages into two main groups:
 
-- *Safe languages* can be used by any users. SQL and PL/pgSQL are the safe languages.
-- *Sand-boxed languages* are only used by superusers because sand-boxed languages provide the capability to bypass security and allow access to external sources. C is an example of a sandboxed language.
+- **Safe languages** can be used by any users. SQL and PL/pgSQL are the safe languages.
+- **Sand-boxed languages** are only used by superusers because sand-boxed languages provide the capability to bypass security and allow access to external sources. C is an example of a sandboxed language.
 
 By default, PostgreSQL supports three procedural languages: SQL, PL/pgSQL, and C. You can also load other procedural languages e.g., Perl, Python, and TCL into PostgreSQL using extensions.
 
@@ -20,10 +20,10 @@ BEGIN
 END [ label ];
 ```
 
-- Each block has two sections: *declaration* and *body*. The declaration section is optional while the body section is required. The block is ended with a semicolon *;* after the END keyword.
+- Each block has two sections: **declaration** and **body**. The declaration section is optional while the body section is required. The block is ended with a semicolon **;** after the END keyword.
 - A block may have an optional label located at the beginning and at the end. You use the block label in case you want to specify it in the EXIT statement of the block body or if you want to qualify the names of variables declared in the block.
-- The declaration section is where you declare all variables used within the body section. Each statement in the declaration section is terminated with a semicolon *;*.
-- The body section is where you place the code. Each statement in the body section is also terminated with a semicolon *;*.
+- The declaration section is where you declare all variables used within the body section. Each statement in the declaration section is terminated with a semicolon **;**.
+- The body section is where you place the code. Each statement in the body section is also terminated with a semicolon **;**.
 
 ```SQL
 DO $$
@@ -207,7 +207,7 @@ Let’s examine the CREATE FUNCTION statement in more detail.
 - First, specify the name of the function after the CREATE FUNCTION keywords.
 - Then, put a comma-separated list of parameters inside the parentheses following the function name.
 - Next, specify the return type of the function after the RETURNS keyword.
-- After that, place the code inside the BEGIN and END block. The function always ends with a semicolon *;* followed by the END keyword.
+- After that, place the code inside the BEGIN and END block. The function always ends with a semicolon **;** followed by the END keyword.
 - Finally, indicate the procedural language of the function e.g., plpgsql in case PL/pgSQL is used.
 
 ```SQL
@@ -434,9 +434,9 @@ END $$;
 
 ### CASE statement
 
-- *Simple CASE statement*
+- **Simple CASE statement**
 
-There are two forms of the CASE statement: *simple* and *searched* CASE statements.
+There are two forms of the CASE statement: **simple** and **searched** CASE statements.
 The CASE expression evaluates to a value, while the CASE statement executes statements based on condition.
 
 ```SQL
@@ -478,7 +478,7 @@ END; $$
 LANGUAGE plpgsql;
 ```
 
-- *Searched CASE statement*
+- **Searched CASE statement**
 
 ```SQL
 CASE
@@ -522,9 +522,9 @@ LANGUAGE plpgsql;
 
 ### LOOP Statement
 
-PostgreSQL provides you with three loop statements: *LOOP*, *WHILE loop*, and *FOR loop*.
+PostgreSQL provides you with three loop statements: **LOOP**, **WHILE loop**, and **FOR loop**.
 
-- *LOOP*
+- **LOOP**
 
 ```SQL
 <<label>>
@@ -558,7 +558,7 @@ END;
 $$ LANGUAGE plpgsql;
 ```
 
-- *WHILE loop*
+- **WHILE loop**
 
 ```SQL
 [ <<label>> ]
@@ -589,7 +589,7 @@ BEGIN
 END;
 ```
 
-- *FOR loop*
+- **FOR loop**
 
 ```SQL
 [ <<label>> ]
@@ -639,4 +639,100 @@ BEGIN
   END LOOP;
 END;
 $$ LANGUAGE plpgsql;
+```
+
+## Cursor
+
+A PL/pgSQL cursor allows us to encapsulate a query and process each individual row at a time. We use cursors when we want to divide a large result set into parts and process each part individually. Cursor is of two types **unbound** and **bound** cursors.
+
+1. First, declare a cursor.
+2. Next, open the cursor.
+3. Then, fetch rows from the result set into a target.
+4. After that, check if there is more row left to fetch. If yes, go to step 3, otherwise, go to step 5.
+5. Finally, close the cursor.
+
+```SQL
+DECLARE
+  cur_films  CURSOR FOR SELECT * FROM film;
+  cur_films2 CURSOR (year integer) FOR SELECT * FROM film WHERE release_year = year;
+```
+
+```SQL
+CREATE OR REPLACE FUNCTION get_film_titles(p_year INTEGER)
+  RETURNS text AS $$
+DECLARE
+  titles TEXT DEFAULT '';
+  rec_film RECORD;
+  cur_films CURSOR(p_year INTEGER)
+    FOR SELECT title, release_year
+        FROM film
+        WHERE release_year = p_year;
+BEGIN
+  -- Open the cursor
+  OPEN cur_films(p_year);
+
+  LOOP
+    -- fetch row into the film
+    FETCH cur_films INTO rec_film;
+    -- exit when no more row to fetch
+    EXIT WHEN NOT FOUND;
+
+    -- build the output
+    IF rec_film.title LIKE '%ful%' THEN
+      titles := titles || ',' || rec_film.title || ':' || rec_film.release_year;
+    END IF;
+  END LOOP;
+  
+   -- Close the cursor
+   CLOSE cur_films;
+
+   RETURN titles;
+END; $$
+LANGUAGE plpgsql;
+```
+
+## CREATE PROCEDURE
+
+A drawback of user-defined functions is that they cannot execute transactions. PostgreSQL 11 introduced stored procedures that support transactions.
+
+```SQL
+CREATE [OR REPLACE] PROCEDURE procedure_name(parameter_list)
+LANGUAGE language_name
+AS $$
+  stored_procedure_body;
+$$;
+```
+
+In this syntax:
+
+1. First, specify the name of the stored procedure after the CREATE PROCEDURE clause.
+2. Next, define a parameter list which is similar to the parameter list of user-defined functions.
+3. Then, specify the programming language for the stored procedure such as PLpgSQL and SQL.
+4. After that, place the code in the body of the stored procedure after that AS keyword.
+5. Finally, use double dollar ($$) to end the stored procedure.
+
+Unlike a user-defined function, a stored procedure does not have a return value. If you want to end a procedure earlier, you can use the RETURN statement with no expression.
+
+```SQL
+CREATE OR REPLACE PROCEDURE transfer(INT, INT, DEC)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- subtracting the amount from the sender's account
+    UPDATE accounts
+    SET balance = balance - $3
+    WHERE id = $1;
+
+    -- adding the amount to the receiver's account
+    UPDATE accounts
+    SET balance = balance + $3
+    WHERE id = $2;
+
+    COMMIT;
+END;
+$$;
+```
+
+```SQL
+CALL transfer(1,2,1000);
 ```
