@@ -5,7 +5,7 @@
 ```ssh
 $ SELECT version();
 ---------------------------------------------------------------------------------------------------------------------------------------------
- PostgreSQL 12.3 (Ubuntu 12.3-1.pgdg16.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 5.4.0-6ubuntu1~16.04.12) 5.4.0 20160609, 64-bit
+PostgreSQL 12.3 (Ubuntu 12.3-1.pgdg16.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 5.4.0-6ubuntu1~16.04.12) 5.4.0 20160609, 64-bit
 (1 row)
 ```
 
@@ -46,7 +46,7 @@ Expanded display is on.
 
 ## 4. Database
 
-- List of Databases
+* **Check list of Databases**
 
 ```ssh
 postgres=# \l
@@ -62,14 +62,14 @@ postgres=# \l
 (4 rows)
 ```
 
-- Connect Database
+* **Connect to Database**
 
 ```ssh
 postgres=# \c dvdrental
 You are now connected to database "dvdrental" as user "postgres".
 ```
 
-- Disconnect Database
+* **Disconnect from Database**
 
 By connecting to another database, you are automatically disconnected from the database to which you connected.
 
@@ -78,40 +78,37 @@ dvdrental-# \c postgres
 You are now connected to database "postgres" as user "postgres".
 ```
 
-- Import Database
+* **Import Database**
 
 ```ssh
 postgres@rajat-Inspiron-3542:~$ pg_restore -U postgres -d dvdrental C:\dvdrental\dvdrental.tar
 Import database
 ```
 
-- Database Size
+* **Check Database size**
 
 ```SQL
-SELECT
-    pg_size_pretty (
-        pg_database_size ('dvdrental')
-    );
+SELECT pg_size_pretty ( pg_database_size ('dvdrental') );
 ```
 
-- All Database size
+* **Check all databases size**
 
 ```SQL
 SELECT
     pg_database.datname,
     pg_size_pretty(pg_database_size(pg_database.datname)) AS size
-    FROM pg_database;
+FROM pg_database;
 ```
 
 ## 5. TABLE
 
-- Table size
+* **Table size**
 
-pg_relation_size is used to calculate the size of table.
+**pg_relation_size** is used to calculate the size of table.
 
-- The pg_relation_size() function returns the size of a specific table in bytes.
-- The pg_relation_size() function returns the size of the table only, not included indexes or additional objects.
-- To get the total size of a table, you use the pg_total_relation_size() function.
+* The pg_relation_size() function returns the size of a specific table in bytes.
+* The pg_relation_size() function returns the size of the table only, not included indexes or additional objects.
+* To get the total size of a table, you use the pg_total_relation_size() function.
 
 ```SQL
 SELECT pg_relation_size('table_name');
@@ -121,30 +118,26 @@ SELECT pg_relation_size('table_name');
 SELECT pg_size_pretty (pg_relation_size('actor'));
 ```
 
-- Indexes size
+* **Indexes size**
 
 ```SQL
-SELECT
-    pg_size_pretty (pg_indexes_size('actor'));
+SELECT pg_size_pretty (pg_indexes_size('actor'));
 ```
 
-- Tablespace size
+* **Tablespace size**
 
 ```SQL
-SELECT
-    pg_size_pretty (
-        pg_tablespace_size ('pg_default')
-    );
+SELECT pg_size_pretty ( pg_tablespace_size ('pg_default'));
 ```
 
-- Value size
+* **Value size**
 To find how much space that needs to store a specific value
 
 ```SQL
 SELECT pg_column_size(5::smallint);
 ```
 
-- Structure of Table
+* **Check structure of Table**
 
 ```ssh
 dvdrental=# \d actor;

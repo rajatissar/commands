@@ -25,7 +25,7 @@ CREATE TRIGGER trigger_name
     EXECUTE PROCEDURE trigger_function
 ```
 
-* *EXAMPLE*
+* **EXAMPLE**
 
 ```SQL
 CREATE OR REPLACE FUNCTION log_last_name_changes()

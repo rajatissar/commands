@@ -1,13 +1,15 @@
 # Stored Procedures
 
-In PostgreSQL, procedural languages such as PL/pgSQL, C, Perl, Python, and Tcl are referred to as stored procedures.
+In PostgreSQL, procedural languages such as **PL/pgSQL**, **C**, **Perl**, **Python**, and **Tcl** are referred to as stored procedures.
 
 PostgreSQL divides the procedural languages into two main groups:
 
-- **Safe languages** can be used by any users. SQL and PL/pgSQL are the safe languages.
-- **Sand-boxed languages** are only used by superusers because sand-boxed languages provide the capability to bypass security and allow access to external sources. C is an example of a sandboxed language.
+* **Safe languages** can be used by any users. SQL and PL/pgSQL are the safe languages.
+* **Sand-boxed languages** are only used by superusers because sand-boxed languages provide the capability to bypass security and allow access to external sources. C is an example of a sandboxed language.
 
 By default, PostgreSQL supports three procedural languages: SQL, PL/pgSQL, and C. You can also load other procedural languages e.g., Perl, Python, and TCL into PostgreSQL using extensions.
+
+* **SYNTAX**
 
 ```SQL
 [ <<label>> ]
@@ -20,10 +22,12 @@ BEGIN
 END [ label ];
 ```
 
-- Each block has two sections: **declaration** and **body**. The declaration section is optional while the body section is required. The block is ended with a semicolon **;** after the END keyword.
-- A block may have an optional label located at the beginning and at the end. You use the block label in case you want to specify it in the EXIT statement of the block body or if you want to qualify the names of variables declared in the block.
-- The declaration section is where you declare all variables used within the body section. Each statement in the declaration section is terminated with a semicolon **;**.
-- The body section is where you place the code. Each statement in the body section is also terminated with a semicolon **;**.
+* Each block has two sections: **declaration** and **body**. The declaration section is optional while the body section is required. The block is ended with a semicolon **;** after the END keyword.
+* A block may have an optional label located at the beginning and at the end. You use the block label in case you want to specify it in the EXIT statement of the block body or if you want to qualify the names of variables declared in the block.
+* The declaration section is where you declare all variables used within the body section. Each statement in the declaration section is terminated with a semicolon **;**.
+* The body section is where you place the code. Each statement in the body section is also terminated with a semicolon **;**.
+
+* **EXAMPLE**
 
 ```SQL
 DO $$
@@ -31,12 +35,14 @@ DO $$
 DECLARE
   counter1 integer := 0;
 BEGIN
-   counter1 := counter1 + 1;
-   RAISE NOTICE 'The current value of counter1 is %', counter1;
+  counter1 := counter1 + 1;
+  RAISE NOTICE 'The current value of counter1 is %', counter1;
 END first_block $$;
 ```
 
 ## Replacement of $$
+
+* **EXAMPLE**
 
 ```SQL
 DO
@@ -44,12 +50,14 @@ DO
 DECLARE
   counter1 integer := 0;
 BEGIN
-    counter1 := counter1 + 1;
-    RAISE NOTICE ''The current value of counter1 is %'', counter1;
+  counter1 := counter1 + 1;
+  RAISE NOTICE ''The current value of counter1 is %'', counter1;
 END first_block';
 ```
 
 ## Block
+
+* **EXAMPLE**
 
 ```SQL
 DO $$
@@ -76,6 +84,8 @@ END outer_block $$;
 
 ## Data Type
 
+* **SYNTAX**
+
 ```SQL
 variable_name table_name.column_name%TYPE;
 ```
@@ -86,15 +96,21 @@ variable_name variable%TYPE;
 
 ## Assigning aliases to variables
 
+* **SYNTAX**
+
 ```SQL
 new_name ALIAS FOR old_name;
 ```
 
 ## Constant
 
+* **SYNTAX**
+
 ```SQL
 constant_name CONSTANT data_type := expression;
 ```
+
+* **EXAMPLE**
 
 ```SQL
 DO $$
@@ -107,6 +123,8 @@ END first_block $$;
 ```
 
 ## PL/pgSQL reporting messages
+
+* **SYNTAX**
 
 ```SQL
 RAISE level format;
@@ -122,6 +140,8 @@ Following the RAISE statement is the level option that specifies the error sever
 | INFO      |
 | WARNING   |
 | EXCEPTION |
+
+* **EXAMPLE**
 
 ```SQL
 DO $$
@@ -140,10 +160,6 @@ WARNING:  warning message 2015-09-10 21:17:39.398+07
 NOTICE:  notice message 2015-09-10 21:17:39.398+07
 ```
 
-```SQL
-USING option = expression
-```
-
 The option can be:
 
 | Option  | Description                                                                                                                                                           |
@@ -152,6 +168,14 @@ The option can be:
 | HINT    | provide the hint message so that the root cause of the error is easier to be discovered                                                                               |
 | DETAIL  | give detailed information about the error                                                                                                                             |
 | ERRCODE | identify the error code, which can be either by condition name or directly five-character SQLSTATE code. Please refer to the table of error codes and condition names |
+
+* **SYNTAX**
+
+```SQL
+USING option = expression
+```
+
+* **EXAMPLE**
 
 ```SQL
 DO $$
@@ -174,6 +198,8 @@ BEGIN
 END $$;
 ```
 
+* **SYNTAX**
+
 ```SQL
 DO $$
 BEGIN
@@ -181,6 +207,8 @@ BEGIN
   RAISE invalid_regular_expression;
 END $$;
 ```
+
+* **EXAMPLE**
 
 ```SQL
 DO $$
@@ -193,6 +221,8 @@ END $$;
 
 ## Function
 
+* **SYNTAX**
+
 ```SQL
 CREATE FUNCTION function_name(p1 type, p2 type)
 RETURNS type AS
@@ -204,11 +234,13 @@ LANGUAGE language_name;
 
 Let’s examine the CREATE FUNCTION statement in more detail.
 
-- First, specify the name of the function after the CREATE FUNCTION keywords.
-- Then, put a comma-separated list of parameters inside the parentheses following the function name.
-- Next, specify the return type of the function after the RETURNS keyword.
-- After that, place the code inside the BEGIN and END block. The function always ends with a semicolon **;** followed by the END keyword.
-- Finally, indicate the procedural language of the function e.g., plpgsql in case PL/pgSQL is used.
+* First, specify the name of the function after the CREATE FUNCTION keywords.
+* Then, put a comma-separated list of parameters inside the parentheses following the function name.
+* Next, specify the return type of the function after the RETURNS keyword.
+* After that, place the code inside the BEGIN and END block. The function always ends with a semicolon **;** followed by the END keyword.
+* Finally, indicate the procedural language of the function e.g., plpgsql in case PL/pgSQL is used.
+
+* **EXAMPLE**
 
 ```SQL
 CREATE FUNCTION fun1 (param1 INTEGER)
@@ -224,6 +256,8 @@ SELECT fun1(20);
 ```
 
 ### OUT
+
+* **EXAMPLE**
 
 ```SQL
 CREATE OR REPLACE FUNCTION hi_lo(a NUMERIC, b NUMERIC, c NUMERIC, OUT hi NUMERIC, OUT lo NUMERIC)
@@ -242,6 +276,8 @@ SELECT * FROM hi_lo(10,20,30);
 
 ### INOUT
 
+* **EXAMPLE**
+
 ```SQL
 CREATE OR REPLACE FUNCTION square(INOUT a NUMERIC)
   AS $$
@@ -256,6 +292,8 @@ SELECT square(4);
 ```
 
 ### VARIADIC
+
+* **EXAMPLE**
 
 ```SQL
 CREATE OR REPLACE FUNCTION sum_avg(VARIADIC list NUMERIC[], OUT total NUMERIC, OUT average NUMERIC)
@@ -275,6 +313,8 @@ SELECT * FROM sum_avg(10,20,30);
 ```
 
 ### Default Value
+
+* **EXAMPLE**
 
 ```SQL
 CREATE OR REPLACE FUNCTION get_rental_duration(
@@ -298,6 +338,8 @@ LANGUAGE plpgsql;
 
 ### DROP Function
 
+* **EXAMPLE**
+
 ```SQL
 DROP FUNCTION get_rental_duration(INTEGER, DATE);
 ```
@@ -305,6 +347,8 @@ DROP FUNCTION get_rental_duration(INTEGER, DATE);
 You must specify the parameters together with the function name when you drop the function.
 
 ### Returns Table
+
+* **EXAMPLE**
 
 ```SQL
 CREATE OR REPLACE FUNCTION get_film (p_pattern VARCHAR)
@@ -355,11 +399,15 @@ LANGUAGE 'plpgsql';
 
 ### IF statement
 
+* **SYNTAX**
+
 ```SQL
 IF condition THEN
   -- statements;
 END IF;
 ```
+
+* **EXAMPLE**
 
 ```SQL
 DO $$
@@ -381,6 +429,8 @@ BEGIN
 END $$;
 ```
 
+* **SYNTAX**
+
 ```SQL
 IF condition THEN
   -- statements;
@@ -388,6 +438,8 @@ ELSE
   -- alternative-statements;
 END IF;
 ```
+
+* **EXAMPLE**
 
 ```SQL
 DO $$
@@ -403,6 +455,8 @@ BEGIN
 END $$;
 ```
 
+* **SYNTAX**
+
 ```SQL
 IF condition-1 THEN
   --- if-statements-1;
@@ -415,6 +469,8 @@ ELSE
   -- else-statements;
 END IF:
 ```
+
+* **EXAMPLE**
 
 ```SQL
 DO $$
@@ -434,10 +490,12 @@ END $$;
 
 ### CASE statement
 
-- **Simple CASE statement**
+* **Simple CASE statement**
 
 There are two forms of the CASE statement: **simple** and **searched** CASE statements.
 The CASE expression evaluates to a value, while the CASE statement executes statements based on condition.
+
+* **SYNTAX**
 
 ```SQL
 CASE search-expression
@@ -449,6 +507,8 @@ CASE search-expression
   ]
 END CASE;
 ```
+
+* **EXAMPLE**
 
 ```SQL
 CREATE OR REPLACE FUNCTION get_price_segment(p_film_id integer)
@@ -478,7 +538,9 @@ END; $$
 LANGUAGE plpgsql;
 ```
 
-- **Searched CASE statement**
+* **Searched CASE statement**
+
+* **SYNTAX**
 
 ```SQL
 CASE
@@ -492,6 +554,8 @@ CASE
   ]
 END CASE;
 ```
+
+* **EXAMPLE**
 
 ```SQL
 CREATE OR REPLACE FUNCTION get_customer_service (p_customer_id INTEGER)
@@ -524,7 +588,9 @@ LANGUAGE plpgsql;
 
 PostgreSQL provides you with three loop statements: **LOOP**, **WHILE loop**, and **FOR loop**.
 
-- **LOOP**
+* **LOOP**
+
+* **SYNTAX**
 
 ```SQL
 <<label>>
@@ -533,6 +599,8 @@ LOOP
   EXIT [<<label>>] WHEN condition;
 END LOOP;
 ```
+
+* **EXAMPLE**
 
 ```SQL
 CREATE OR REPLACE FUNCTION fibonacci (n INTEGER)
@@ -558,7 +626,9 @@ END;
 $$ LANGUAGE plpgsql;
 ```
 
-- **WHILE loop**
+* **WHILE loop**
+
+* **SYNTAX**
 
 ```SQL
 [ <<label>> ]
@@ -566,6 +636,8 @@ WHILE condition LOOP
   -- statements;
 END LOOP;
 ```
+
+* **EXAMPLE**
 
 ```SQL
 CREATE OR REPLACE FUNCTION fibonacci (n INTEGER)
@@ -589,7 +661,9 @@ BEGIN
 END;
 ```
 
-- **FOR loop**
+* **FOR loop**
+
+* **SYNTAX**
 
 ```SQL
 [ <<label>> ]
@@ -597,6 +671,8 @@ FOR loop_counter IN [ REVERSE ] from.. to [ BY expression ] LOOP
     statements
 END LOOP [ label ];
 ```
+
+* **EXAMPLE**
 
 ```SQL
 DO $$
@@ -616,12 +692,16 @@ BEGIN
 END; $$
 ```
 
+* **SYNTAX**
+
 ```SQL
 [ <<label>> ]
 FOR target IN query LOOP
   -- statements
 END LOOP [ label ];
 ```
+
+* **EXAMPLE**
 
 ```SQL
 CREATE OR REPLACE FUNCTION for_loop_through_query(n INTEGER DEFAULT 10)
@@ -650,6 +730,8 @@ A PL/pgSQL cursor allows us to encapsulate a query and process each individual r
 3. Then, fetch rows from the result set into a target.
 4. After that, check if there is more row left to fetch. If yes, go to step 3, otherwise, go to step 5.
 5. Finally, close the cursor.
+
+* **EXAMPLE**
 
 ```SQL
 DECLARE
@@ -695,6 +777,8 @@ LANGUAGE plpgsql;
 
 A drawback of user-defined functions is that they cannot execute transactions. PostgreSQL 11 introduced stored procedures that support transactions.
 
+* **SYNTAX**
+
 ```SQL
 CREATE [OR REPLACE] PROCEDURE procedure_name(parameter_list)
 LANGUAGE language_name
@@ -712,6 +796,8 @@ In this syntax:
 5. Finally, use double dollar ($$) to end the stored procedure.
 
 Unlike a user-defined function, a stored procedure does not have a return value. If you want to end a procedure earlier, you can use the RETURN statement with no expression.
+
+* **EXAMPLE**
 
 ```SQL
 CREATE OR REPLACE PROCEDURE transfer(INT, INT, DEC)
