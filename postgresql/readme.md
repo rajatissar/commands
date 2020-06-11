@@ -39,4 +39,6 @@ Connect to dvdrental database
 
 ## 7. [Stored Procedures](https://github.com/rajatissar/commands/blob/master/postgresql/md/stored-procedures.md)
 
-## 8. [Notes :pushpin:](https://github.com/rajatissar/commands/blob/master/postgresql/md/notes.md)
+## 8. [Triggers](https://github.com/rajatissar/commands/blob/master/postgresql/md/triggers.md)
+
+## 9. [Notes :pushpin:](https://github.com/rajatissar/commands/blob/master/postgresql/md/notes.md)
