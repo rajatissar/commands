@@ -43,4 +43,6 @@ postgres=# \c dvdrental
 
 ## 9. [Views](https://github.com/rajatissar/commands/blob/master/postgresql/md/views.md)
 
-## 10. [Notes :pushpin:](https://github.com/rajatissar/commands/blob/master/postgresql/md/notes.md)
+## 10. [Indexes](https://github.com/rajatissar/commands/blob/master/postgresql/md/indexes.md)
+
+## 11. [Notes :pushpin:](https://github.com/rajatissar/commands/blob/master/postgresql/md/notes.md)
