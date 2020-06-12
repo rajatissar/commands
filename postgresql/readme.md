@@ -28,7 +28,7 @@ postgres=# \c dvdrental
 
 ## 3. Popular Links
 
-* [PostgreSQL Download Ubuntu](https://www.postgresql.org/download/linux/ubuntu/)
+* [Download PostgreSQL for Ubuntu](https://www.postgresql.org/download/linux/ubuntu/)
 * [PostgreSQL tutorial](https://www.postgresqltutorial.com/)
 
 ## 4. [Terminology](https://github.com/rajatissar/commands/blob/master/postgresql/md/terminology.md)
@@ -41,4 +41,6 @@ postgres=# \c dvdrental
 
 ## 8. [Triggers](https://github.com/rajatissar/commands/blob/master/postgresql/md/triggers.md)
 
-## 9. [Notes :pushpin:](https://github.com/rajatissar/commands/blob/master/postgresql/md/notes.md)
+## 9. [Views](https://github.com/rajatissar/commands/blob/master/postgresql/md/views.md)
+
+## 10. [Notes :pushpin:](https://github.com/rajatissar/commands/blob/master/postgresql/md/notes.md)

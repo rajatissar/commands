@@ -787,7 +787,7 @@ FROM products
 NATURAL JOIN categories;
 ```
 
-![JOIN](./assets/PostgreSQL-Joins.png)
+![JOIN](../assets/PostgreSQL-Joins.png)
 
 ## 6. Grouping Data
 
@@ -900,7 +900,7 @@ FROM
   hipos;
 ```
 
-![INTERSECT-Operator](./assets/PostgreSQL-INTERSECT-Operator-300x206.png)
+![INTERSECT-Operator](../assets/PostgreSQL-INTERSECT-Operator-300x206.png)
 
 - EXCEPT
 
@@ -937,7 +937,7 @@ INNER JOIN film ON film.film_id = inventory.film_id
 ORDER BY title;
 ```
 
-![EXCEPT-Operator](./assets/PostgreSQL-EXCEPT-300x202.png)
+![EXCEPT-Operator](../assets/PostgreSQL-EXCEPT-300x202.png)
 
 ## 8. Grouping Sets
 

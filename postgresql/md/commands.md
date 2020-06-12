@@ -102,6 +102,53 @@ FROM pg_database;
 
 ## 5. TABLE
 
+* **Check list of tables***
+
+```ssh
+dvdrental=# \dt
+\             List of relations
+ Schema |     Name      | Type  |  Owner
+--------+---------------+-------+----------
+ public | actor         | table | postgres
+ public | address       | table | postgres
+ public | category      | table | postgres
+ public | city          | table | postgres
+ public | country       | table | postgres
+ public | customer      | table | postgres
+ public | employee      | table | postgres
+ public | film          | table | postgres
+ public | film_actor    | table | postgres
+ public | film_category | table | postgres
+ public | inventory     | table | postgres
+ public | language      | table | postgres
+ public | payment       | table | postgres
+ public | persons       | table | postgres
+ public | rental        | table | postgres
+ public | staff         | table | postgres
+ public | store         | table | postgres
+(17 rows)
+```
+
+* **Check structure of Table**
+
+```ssh
+dvdrental=# \d actor;
+                                            Table "public.actor"
+   Column    |            Type             | Collation | Nullable |                 Default
+-------------+-----------------------------+-----------+----------+-----------------------------------------
+ actor_id    | integer                     |           | not null | nextval('actor_actor_id_seq'::regclass)
+ first_name  | character varying(45)       |           | not null |
+ last_name   | character varying(45)       |           | not null |
+ last_update | timestamp without time zone |           | not null | now()
+Indexes:
+    "actor_pkey" PRIMARY KEY, btree (actor_id)
+    "idx_actor_last_name" btree (last_name)
+Referenced by:
+    TABLE "film_actor" CONSTRAINT "film_actor_actor_id_fkey" FOREIGN KEY (actor_id) REFERENCES actor(actor_id) ON UPDATE CASCADE ON DELETE RESTRICT
+Triggers:
+    last_updated BEFORE UPDATE ON actor FOR EACH ROW EXECUTE FUNCTION last_updated()
+```
+
 * **Table size**
 
 **pg_relation_size** is used to calculate the size of table.
@@ -137,22 +184,21 @@ To find how much space that needs to store a specific value
 SELECT pg_column_size(5::smallint);
 ```
 
-* **Check structure of Table**
+## 5. View
+
+* **Check list of Views**
 
 ```ssh
-dvdrental=# \d actor;
-                                            Table "public.actor"
-   Column    |            Type             | Collation | Nullable |                 Default
--------------+-----------------------------+-----------+----------+-----------------------------------------
- actor_id    | integer                     |           | not null | nextval('actor_actor_id_seq'::regclass)
- first_name  | character varying(45)       |           | not null |
- last_name   | character varying(45)       |           | not null |
- last_update | timestamp without time zone |           | not null | now()
-Indexes:
-    "actor_pkey" PRIMARY KEY, btree (actor_id)
-    "idx_actor_last_name" btree (last_name)
-Referenced by:
-    TABLE "film_actor" CONSTRAINT "film_actor_actor_id_fkey" FOREIGN KEY (actor_id) REFERENCES actor(actor_id) ON UPDATE CASCADE ON DELETE RESTRICT
-Triggers:
-    last_updated BEFORE UPDATE ON actor FOR EACH ROW EXECUTE FUNCTION last_updated()
+dvdrental=# \dv
+                   List of relations
+ Schema |            Name            | Type |  Owner
+--------+----------------------------+------+----------
+ public | actor_info                 | view | postgres
+ public | customer_list              | view | postgres
+ public | film_list                  | view | postgres
+ public | nicer_but_slower_film_list | view | postgres
+ public | sales_by_film_category     | view | postgres
+ public | sales_by_store             | view | postgres
+ public | staff_list                 | view | postgres
+(7 rows)
 ```
