@@ -31,18 +31,18 @@ postgres=# \c dvdrental
 * [Download PostgreSQL for Ubuntu](https://www.postgresql.org/download/linux/ubuntu/)
 * [PostgreSQL tutorial](https://www.postgresqltutorial.com/)
 
-## 4. [Terminology](https://github.com/rajatissar/commands/blob/master/postgresql/md/terminology.md)
+## 4. [Terminology](/postgresql/md/terminology.md)
 
-## 5. [Commands](https://github.com/rajatissar/commands/blob/master/postgresql/md/commands.md)
+## 5. [Commands](/postgresql/md/commands.md)
 
-## 6. [Queries](https://github.com/rajatissar/commands/blob/master/postgresql/md/queries.md)
+## 6. [Queries](/postgresql/md/queries.md)
 
-## 7. [Stored Procedures](https://github.com/rajatissar/commands/blob/master/postgresql/md/stored-procedures.md)
+## 7. [Stored Procedures](/postgresql/md/stored-procedures.md)
 
-## 8. [Triggers](https://github.com/rajatissar/commands/blob/master/postgresql/md/triggers.md)
+## 8. [Triggers](/postgresql/md/triggers.md)
 
-## 9. [Views](https://github.com/rajatissar/commands/blob/master/postgresql/md/views.md)
+## 9. [Views](/postgresql/md/views.md)
 
-## 10. [Indexes](https://github.com/rajatissar/commands/blob/master/postgresql/md/indexes.md)
+## 10. [Indexes](/postgresql/md/indexes.md)
 
-## 11. [Notes :pushpin:](https://github.com/rajatissar/commands/blob/master/postgresql/md/notes.md)
+## 11. [Notes :pushpin:](/postgresql/md/notes.md)

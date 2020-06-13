@@ -3,8 +3,6 @@
 This repository contains various commands.
 Below are some of the available commands.
 
-* Git
-* Heroku
-* PostgreSQL
-
-Please open the respective directory to view each of them in more detail.
+1. [Git](/git/readme.md)
+2. [Heroku](/heroku/readme.md)
+3. [PostgreSQL](/postgresql/readme.md)
