@@ -45,4 +45,6 @@ postgres=# \c dvdrental
 
 ## 10. [Indexes](/postgresql/md/indexes.md)
 
-## 11. [Notes :pushpin:](/postgresql/md/notes.md)
+## 11. [Administration](/postgresql/md/administration.md)
+
+## 12. [Notes :pushpin:](/postgresql/md/notes.md)
