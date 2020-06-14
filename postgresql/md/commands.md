@@ -2,7 +2,7 @@
 
 ## 1. Check current PostgreSQL version that you have in the system
 
-```ssh
+```SSH
 $ SELECT version();
 ---------------------------------------------------------------------------------------------------------------------------------------------
 PostgreSQL 12.3 (Ubuntu 12.3-1.pgdg16.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 5.4.0-6ubuntu1~16.04.12) 5.4.0 20160609, 64-bit
@@ -24,7 +24,7 @@ Jun 03 14:28:33 rajat-Inspiron-3542 systemd[1]: Starting PostgreSQL RDBMS...
 Jun 03 14:28:33 rajat-Inspiron-3542 systemd[1]: Started PostgreSQL RDBMS.
 ```
 
-```ssh
+```SSH
 $ service postgresql status
 ● postgresql.service - PostgreSQL RDBMS
    Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
@@ -39,16 +39,16 @@ Jun 03 14:28:33 rajat-Inspiron-3542 systemd[1]: Started PostgreSQL RDBMS.
 
 ## 3. Show psql query results more clearly
 
-```ssh
+```SSH
 dvdrental=# \x on
 Expanded display is on.
 ```
 
 ## 4. Database
 
-* **Check list of Databases**
+### Check list of Databases
 
-```ssh
+```SSH
 postgres=# \l
                              List of databases
    Name    |  Owner   | Encoding | Collate | Ctype |   Access privileges
@@ -62,36 +62,43 @@ postgres=# \l
 (4 rows)
 ```
 
-* **Connect to Database**
+```SQL
+SELECT
+    datname
+FROM
+    pg_database;
+```
 
-```ssh
+### Connect to Database
+
+```SSH
 postgres=# \c dvdrental
 You are now connected to database "dvdrental" as user "postgres".
 ```
 
-* **Disconnect from Database**
+### Disconnect from Database
 
 By connecting to another database, you are automatically disconnected from the database to which you connected.
 
-```ssh
+```SSH
 dvdrental-# \c postgres
 You are now connected to database "postgres" as user "postgres".
 ```
 
-* **Import Database**
+### Import Database
 
-```ssh
+```SSH
 postgres@rajat-Inspiron-3542:~$ pg_restore -U postgres -d dvdrental C:\dvdrental\dvdrental.tar
 Import database
 ```
 
-* **Check Database size**
+### Check Database size
 
 ```SQL
 SELECT pg_size_pretty ( pg_database_size ('dvdrental') );
 ```
 
-* **Check all databases size**
+### Check all databases size
 
 ```SQL
 SELECT
@@ -102,9 +109,9 @@ FROM pg_database;
 
 ## 5. TABLE
 
-* **Check list of tables***
+### Check list of tables
 
-```ssh
+```SSH
 dvdrental=# \dt
 \             List of relations
  Schema |     Name      | Type  |  Owner
@@ -129,9 +136,19 @@ dvdrental=# \dt
 (17 rows)
 ```
 
-* **Check structure of Table**
+```SQL
+SELECT
+    *
+FROM
+    pg_catalog.pg_tables
+WHERE
+    schemaname != 'pg_catalog'
+AND schemaname != 'information_schema';
+```
 
-```ssh
+### Check structure of Table
+
+```SSH
 dvdrental=# \d actor;
                                             Table "public.actor"
    Column    |            Type             | Collation | Nullable |                 Default
@@ -149,7 +166,16 @@ Triggers:
     last_updated BEFORE UPDATE ON actor FOR EACH ROW EXECUTE FUNCTION last_updated()
 ```
 
-* **Table size**
+```SQL
+SELECT
+    COLUMN_NAME
+FROM
+    information_schema.COLUMNS
+WHERE
+    TABLE_NAME = 'city';
+```
+
+### Table size
 
 **pg_relation_size** is used to calculate the size of table.
 
@@ -165,19 +191,20 @@ SELECT pg_relation_size('table_name');
 SELECT pg_size_pretty (pg_relation_size('actor'));
 ```
 
-* **Indexes size**
+### Indexes size
 
 ```SQL
 SELECT pg_size_pretty (pg_indexes_size('actor'));
 ```
 
-* **Tablespace size**
+### Tablespace size
 
 ```SQL
 SELECT pg_size_pretty ( pg_tablespace_size ('pg_default'));
 ```
 
-* **Value size**
+### Value size
+
 To find how much space that needs to store a specific value
 
 ```SQL
@@ -186,9 +213,9 @@ SELECT pg_column_size(5::smallint);
 
 ## 5. View
 
-* **Check list of Views**
+### Check list of Views
 
-```ssh
+```SSH
 dvdrental=# \dv
                    List of relations
  Schema |            Name            | Type |  Owner
@@ -201,4 +228,101 @@ dvdrental=# \dv
  public | sales_by_store             | view | postgres
  public | staff_list                 | view | postgres
 (7 rows)
+```
+
+## 6. Schema
+
+### Check list of Schema
+
+```SSH
+dvdrental=# \dv
+                   List of relations
+ Schema |            Name            | Type |  Owner
+--------+----------------------------+------+----------
+ public | actor1                     | view | postgres
+ public | actor_info                 | view | postgres
+ public | customer_list              | view | postgres
+ public | film_list                  | view | postgres
+ public | nicer_but_slower_film_list | view | postgres
+ public | sales_by_film_category     | view | postgres
+ public | sales_by_store             | view | postgres
+ public | staff_list                 | view | postgres
+(8 rows)
+```
+
+## 7. Function
+
+### Check list of functions
+
+```SSH
+dvdrental=# \df
+                                                          List of functions
+ Schema |            Name            | Result data type |                         Argument data types                         | Type
+--------+----------------------------+------------------+---------------------------------------------------------------------+------
+ public | _group_concat              | text             | text, text                                                          | func
+ public | film_in_stock              | SETOF integer    | p_film_id integer, p_store_id integer, OUT p_film_count integer     | func
+ public | film_not_in_stock          | SETOF integer    | p_film_id integer, p_store_id integer, OUT p_film_count integer     | func
+ public | fun1                       | integer          | param1 integer                                                      | func
+ public | get_customer_balance       | numeric          | p_customer_id integer, p_effective_date timestamp without time zone | func
+ public | group_concat               | text             | text                                                                | agg
+ public | inventory_held_by_customer | integer          | p_inventory_id integer                                              | func
+ public | inventory_in_stock         | boolean          | p_inventory_id integer                                              | func
+ public | last_day                   | date             | timestamp without time zone                                         | func
+ public | last_updated               | trigger          |                                                                     | func
+ public | rewards_report             | SETOF customer   | min_monthly_purchases integer, min_dollar_amount_purchased numeric  | func
+(11 rows)
+```
+
+## 8. Users
+
+### Check list users and their roles
+
+```SSH
+dvdrental=# \du
+                                   List of roles
+ Role name |                         Attributes                         | Member of
+-----------+------------------------------------------------------------+-----------
+ postgres  | Superuser, Create role, Create DB, Replication, Bypass RLS | {}
+ rajat     | Cannot login                                              +| {}
+           | Password valid until 2020-06-14 00:00:00+05:30             |
+ rajat1    | Superuser, Cannot login                                    | {}
+ rajat3    | Create role, Cannot login                                  | {}
+```
+
+## 9. Command history
+
+```SSH
+dvdrental=# \s
+SELECT fun1(1);
+\c dvdrental
+\dv
+\df
+\du
+\s
+```
+
+```SSH
+dvdrental=# \s /home/rajat/Documents/my-work/github/commands
+```
+
+## 10. Execute psql commands from a file
+
+```SSH
+dvdrental=# \i /home/rajat/Documents/my-work/github/commands
+```
+
+## 11. Turn on/off query execution time
+
+```SSH
+dvdrental=# \timing ON
+```
+
+```SSH
+dvdrental=# \timing OFF
+```
+
+## 12.Edit command in your own editor
+
+```SSH
+dvdrental=# \e
 ```

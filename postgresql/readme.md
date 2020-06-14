@@ -28,8 +28,9 @@ postgres=# \c dvdrental
 
 ## 3. Popular Links
 
-* [Download PostgreSQL for Ubuntu](https://www.postgresql.org/download/linux/ubuntu/)
-* [PostgreSQL tutorial](https://www.postgresqltutorial.com/)
+1. [Download PostgreSQL for Ubuntu](https://www.postgresql.org/download/linux/ubuntu/)
+2. [PostgreSQL tutorial](https://www.postgresqltutorial.com/)
+3. [17 Practical psql Commands That You Don’t Want To Miss](https://www.postgresqltutorial.com/psql-commands/)
 
 ## 4. [Terminology](/postgresql/md/terminology.md)
 
