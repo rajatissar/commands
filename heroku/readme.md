@@ -2,6 +2,29 @@
 
 Heroku is a cloud platform as a service supporting several programming languages.
 
+## Installation
+
+```SH
+$ sudo apt update
+update apt
+$ sudo apt install heroku
+install heroku
+```
+
+OR
+
+```SH
+$ sudo snap install heroku --classic
+install heroku by snap
+```
+
+OR
+
+```SH
+$ curl https://cli-assets.heroku.com/install.sh | sh
+install heroku by curl
+```
+
 ## Check Node Version
 
 ```SH
