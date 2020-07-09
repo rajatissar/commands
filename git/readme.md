@@ -1,8 +1,19 @@
 # Git
 
-## 1. Git Remote link
+Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency.
 
-```bash
+## 1. Set config of Git locally
+
+```BASH
+$ git config user.email
+Sets email of user
+$ git config user.name
+Sets name of user
+```
+
+## 2. Get information about remote repository
+
+```BASH
 $ git remote show origin
 * remote origin
   Fetch URL: https://github.com/rajatissar/commands.git
@@ -17,49 +28,69 @@ $ git remote show origin
     master pushes to master (up to date)
 ```
 
-```bash
+```BASH
 $ git config --get remote.origin.url
 https://github.com/rajatissar/commands.git
 ```
 
-## 2. Tags
+## 3. Steps to be followed for converting all previous commits into single commit
 
-```bash
+```BASH
+$ rm -rf .git
+It will delete the local .git folder present in your workspace
+
+$ git init
+It will initialize a new git repository locally
+
+$ git add .
+It will add the current directory to the staging area of your git repository
+
+$ git commit -m "initial commit"
+It will add a commit message
+
+$ git remote add origin https://github.com/rajatissar/node-server.git
+It will add a remote git repository of your choice
+
+$ git push --force --set-upstream origin master
+If the remote repository is same then you need to push the commit by force
+```
+
+## 4. Delete remote branch
+
+```BASH
+$ git push origin --delete development
+It will delete the development branch present on remote repository
+```
+
+## 5. Tags
+
+```BASH
 $ git tag -a <tag_name> -m '<tag_message>'
 Create an annotated tag
 ```
 
-```bash
+```BASH
 $ git tag <tag_name>
 Create a lightweight tag
 ```
 
-```bash
+```BASH
 $ git push origin --tags
 Push all your tags (a regular push won't push a tag)
 ```
 
-```bash
+```BASH
 $ git push origin : <tag_name>
 Push a single tag
 ```
 
-```bash
+```BASH
 git tag
 List the tags in a repository
 ```
 
-```bash
+```BASH
 $ git tag -d <tag_name>
 $ git push origin :refs/tags/<tag_name>
 Remove a tag from a repository
-```
-
-## 3. config
-
-```bash
-$ git config user.email
-Sets email of user
-$ git config user.name
-Sets name of user
 ```
