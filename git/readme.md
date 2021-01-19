@@ -94,3 +94,22 @@ $ git tag -d <tag_name>
 $ git push origin :refs/tags/<tag_name>
 Remove a tag from a repository
 ```
+
+## 6. Move stage code to unstage code
+
+```BASH
+$ git reset
+It will move code from stage to unstage
+```
+
+## 7. Discard not commit code
+
+```BASH
+$ git checkout .
+It will discard changes in changed files
+```
+
+```BASH
+$ git clean -fd
+It will remove untracked files
+```
