@@ -55,7 +55,12 @@ $ git push --force --set-upstream origin master
 If the remote repository is same then you need to push the commit by force
 ```
 
-## 4. Delete remote branch
+## 4. Delete branch
+
+```BASH
+$ git branch -d development
+It will delete the development branch present locally on system. It will not delete branch on remote
+```
 
 ```BASH
 $ git push origin --delete development
@@ -112,4 +117,11 @@ It will discard changes in changed files
 ```BASH
 $ git clean -fd
 It will remove untracked files
+```
+
+### 8. Remove latest pull changes
+
+```BASH
+$ git reset --soft HEAD~1
+It will remove latest pull
 ```
