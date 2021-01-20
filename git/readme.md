@@ -125,3 +125,20 @@ It will remove untracked files
 $ git reset --soft HEAD~1
 It will remove latest pull
 ```
+
+### 9. Remove latest commit
+
+```BASH
+$ git reset --soft HEAD~1
+It will remove latest commit
+```
+
+### 10. Remove latest commit on remote as well
+
+```BASH
+$ git reset HEAD~
+It will remove latest commit
+
+$ git push origin master --force
+It will remove latest commit on remote
+```
