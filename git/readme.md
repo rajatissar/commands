@@ -2,7 +2,19 @@
 
 Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency.
 
-## 1. Set config of Git locally
+## 1. Clone
+
+```BASH
+$ git clone https://github.com/rajatissar/git.git
+It will take clone
+```
+
+```BASH
+$ git clone --branch=feature https://github.com/rajatissar/git.git customFolderName
+It will take clone of specific branch and save in specific folder
+```
+
+## 2. Set config of Git locally
 
 ```BASH
 $ git config user.email
@@ -11,7 +23,7 @@ $ git config user.name
 Sets name of user
 ```
 
-## 2. Get information about remote repository
+## 3. Get information about remote repository
 
 ```BASH
 $ git remote show origin
@@ -33,7 +45,7 @@ $ git config --get remote.origin.url
 https://github.com/rajatissar/commands.git
 ```
 
-## 3. Steps to be followed for converting all previous commits into single commit
+## 4. Steps to be followed for converting all previous commits into single commit
 
 ```BASH
 $ rm -rf .git
@@ -55,7 +67,7 @@ $ git push --force --set-upstream origin master
 If the remote repository is same then you need to push the commit by force
 ```
 
-## 4. Delete branch
+## 5. Delete branch
 
 ```BASH
 $ git branch -d development
@@ -67,7 +79,7 @@ $ git push origin --delete development
 It will delete the development branch present on remote repository
 ```
 
-## 5. Tags
+## 6. Tags
 
 ```BASH
 $ git tag -a <tag_name> -m '<tag_message>'
@@ -100,14 +112,14 @@ $ git push origin :refs/tags/<tag_name>
 Remove a tag from a repository
 ```
 
-## 6. Move stage code to unstage code
+## 7. Move stage code to unstage code
 
 ```BASH
 $ git reset
 It will move code from stage to unstage
 ```
 
-## 7. Discard not commit code
+## 8. Discard not commit code
 
 ```BASH
 $ git checkout .
@@ -119,21 +131,21 @@ $ git clean -fd
 It will remove untracked files
 ```
 
-### 8. Remove latest pull changes
+### 9. Remove latest pull changes
 
 ```BASH
 $ git reset --soft HEAD~1
 It will remove latest pull
 ```
 
-### 9. Remove latest commit
+### 10. Remove latest commit
 
 ```BASH
 $ git reset --soft HEAD~1
 It will remove latest commit
 ```
 
-### 10. Remove latest commit on remote as well
+### 11. Remove latest commit on remote as well
 
 ```BASH
 $ git reset HEAD~
